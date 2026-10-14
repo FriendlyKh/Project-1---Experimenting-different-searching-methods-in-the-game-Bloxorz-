@@ -1,0 +1,11 @@
+# Bloxorz Solver - Project Dependencies
+# Install with: pip install -r requirements.txt
+
+# GUI & Visualization (Required for playable interface and solver replay)
+pygame>=2.5.0
+
+# Plotting & Benchmark Charts (Required for Section 3.6 Experiment Report)
+matplotlib>=3.7.0
+
+# Optional testing framework
+pytest>=7.4.0

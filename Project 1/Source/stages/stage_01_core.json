@@ -1,0 +1,13 @@
+{
+  "name": "Stage 01 - Core Rolling Basics",
+  "grid": [
+    "111000",
+    "111110",
+    "011111",
+    "001121"
+  ],
+  "start": [1, 1],
+  "goal": [3, 4],
+  "bridges": [],
+  "switches": []
+}

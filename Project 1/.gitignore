@@ -1,0 +1,22 @@
+# Bloxorz Solver - Project Workspace
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Benchmark results
+experiments/output/
+*.csv
+*.png
