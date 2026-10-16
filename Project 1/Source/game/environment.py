@@ -9,6 +9,7 @@ from typing import List, Tuple, Optional
 from .constants import Direction
 from .board import Board
 from .state import GameState
+from .constants import SwitchType
 
 
 class BloxorzEnv:
@@ -37,13 +38,12 @@ class BloxorzEnv:
     def get_legal_actions(self, state: GameState) -> List[Direction]:
         """
         Returns candidate actions from this state.
-        
-        Guidelines for Member 1:
-        - If state.block.is_split: [UP, DOWN, LEFT, RIGHT, SWITCH_CUBE]
-        - Otherwise: [UP, DOWN, LEFT, RIGHT]
+
         """
-        # TODO [Member 1]: Return legal actions for current block mode.
-        raise NotImplementedError("Member 1: Implement get_legal_actions.")
+        if state.block.is_split:
+            return [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT, Direction.SWITCH_CUBE]
+        else:
+            return [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT]
 
     def step(self, state: GameState, action: Direction) -> Optional[GameState]:
         """
@@ -62,7 +62,23 @@ class BloxorzEnv:
         5. Verify validity with `next_state.is_valid(self.board)`.
            If valid, return `next_state`; otherwise return `None`.
         """
-        # TODO [Member 1]: Implement transition physics and switch activation logic.
+        next_block = state.block.roll(action)
+        curr_state = list(state.bridge_states)
+        switch = self.board.switches
+        #SOFT switch
+        for occupied_cells in next_block.occupied_cells():
+            if switch[occupied_cells[0]][occupied_cells[1]] == SwitchType.SOFT:
+                for linked in switch[occupied_cells[0]][occupied_cells[1]].linked_bridges:
+                    for b_id, bridge in self.board.bridges.items():
+                        if linked == b_id:
+                            pass
+
+
+
+
+
+
+
         raise NotImplementedError("Member 1: Implement step transition model.")
 
     def get_successors(
