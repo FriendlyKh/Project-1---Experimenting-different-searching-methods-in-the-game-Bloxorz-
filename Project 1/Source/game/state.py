@@ -30,7 +30,7 @@ class GameState:
         self._cached_dict: Optional[Dict[str, bool]] = None
 
     @property
-    def bridge_dict(self) -> Dict[str, bool]:
+    def bridge_dict(self) -> Dict[str, bool] | None:
         """Returns bridge states as a dictionary for convenient lookup."""
         if self._cached_dict is None:
             self._cached_dict = dict(self.bridge_states)
@@ -42,13 +42,16 @@ class GameState:
         The block falls into the goal hole ONLY when standing upright on the goal cell.
         - A block that merely lies across the goal cell does NOT win.
         - A single split cube CANNOT complete the stage (Section 2.5).
-        
-        Guidelines for Member 1:
-        1. If self.block.is_split is True -> return False.
-        2. Check if self.block.orientation == Orientation.STANDING.
-        3. Check if (self.block.r, self.block.c) == board.goal_pos.
         """
-        # TODO [Member 1]: Implement victory goal check according to Section 2.4.
+
+        #Split therefore cant be goaled
+        if self.block.is_split:
+            return False
+        else:
+            if self.block.orientation == Orientation.STANDING:
+                if (self.block.r, self.block.c) == board.goal_pos:
+                    return True
+
         raise NotImplementedError("Member 1: Implement is_goal check.")
 
     def is_valid(self, board: Board) -> bool:
@@ -57,16 +60,16 @@ class GameState:
         1. All occupied cells must be inside bounds and passable (floor or open bridge).
         2. Fragile tiles rule (Section 2.5):
            A fragile tile breaks if the 1x1x2 block stands upright on it.
-        
-        Guidelines for Member 1:
-        1. Get all occupied cells using self.block.occupied_cells().
-        2. For every cell (r, c), verify board.is_passable(r, c, self.bridge_dict).
-        3. If block is NOT split and is STANDING upright:
-           Check if board.get_base_tile(r, c) == TileType.FRAGILE. If so, return False.
-        4. Return True if all checks pass.
+
         """
-        # TODO [Member 1]: Implement state legality validation (bounds, voids, fragile tiles).
-        raise NotImplementedError("Member 1: Implement is_valid check.")
+        cells = self.block.occupied_cells()
+        for cell in cells:
+            if not (board.is_passable(cell[0], cell[1], self.bridge_dict)):
+                return False
+        if (not self.block.is_split) and (self.block.orientation == Orientation.STANDING):
+            if board.get_base_tile(self.block.r,self.block.c) == TileType.FRAGILE:
+                return False
+        return True
 
     def __hash__(self) -> int:
         """
@@ -76,20 +79,21 @@ class GameState:
         Hash both the block state (via self.block.to_tuple()) AND the bridge states.
         Cache the hash value in self._cached_hash for high performance during search!
         """
-        # TODO [Member 1]: Implement state hashing combining block and bridge states.
-        raise NotImplementedError("Member 1: Implement __hash__.")
+        if getattr(self, '_cached_hash', None) is not None:
+            return self._cached_hash
+        bridge_state = tuple(self.bridges)
+        self._cached_hash = hash((self.block.to_tuple(), bridge_state))
+        return self._cached_hash
 
     def __eq__(self, other: object) -> bool:
         """
         Checks equality between two game states.
-        
-        Guidelines for Member 1:
-        Two states are equal if and only if:
-        1. Both are GameState instances.
-        2. Both blocks have identical to_tuple() representations.
-        3. Both bridge_states tuples are identical.
         """
-        # TODO [Member 1]: Implement state equality check.
+        if (GameState == type(other)) and (self.block == other.block) and (self.bridge_states == other.bridge_states):
+            return True
+        return False
+
+
         raise NotImplementedError("Member 1: Implement __eq__.")
 
     def __repr__(self) -> str:

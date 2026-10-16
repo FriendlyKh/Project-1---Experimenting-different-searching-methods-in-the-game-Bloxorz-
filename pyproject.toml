@@ -1,0 +1,5 @@
+[project]
+name = "project-1-experimenting-different-searching-methods-in-the-game-bloxorz"
+version = "0.1.0"
+requires-python = ">=3.14"
+dependencies = []

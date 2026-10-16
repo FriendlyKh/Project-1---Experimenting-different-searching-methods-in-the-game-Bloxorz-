@@ -11,11 +11,10 @@ from .constants import Orientation, Direction
 
 class Block:
     """
-    Represents the block in Bloxorz.
-    
-    Can be in two modes:
+    A block in Bloxorz.
+    Two modes:
     1. Standard 1x1x2 block:
-       - Defined by top-left anchor (r, c) and orientation (STANDING, LYING_H, LYING_V).
+       - Positioned at top anchor (r, c) and have 3 orientation (STANDING, LYING_H, LYING_V).
     2. Split mode (2 unit cubes 1x1x1):
        - Defined by cube1 (r1, c1), cube2 (r2, c2), and active_cube index (0 or 1).
     """
@@ -41,20 +40,21 @@ class Block:
     def occupied_cells(self) -> List[Tuple[int, int]]:
         """
         Returns list of (row, col) coordinates currently occupied by the block.
-        
-        Guidelines for Member 1:
-        - If is_split: returns [self.cube1, self.cube2]
-        - If STANDING: returns [(self.r, self.c)]
-        - If LYING_H: returns [(self.r, self.c), (self.r, self.c + 1)]
-        - If LYING_V: returns [(self.r, self.c), (self.r + 1, self.c)]
         """
-        # TODO [Member 1]: Return list of (row, col) coordinates occupied by the block.
-        raise NotImplementedError("Member 1: Implement occupied_cells.")
+        if self.is_split:
+            return [self.cube1,self.cube2]
+        else:
+            if self.orientation == Orientation.STANDING:
+                return [(self.r, self.c)]
+            if self.orientation ==  Orientation.LYING_H:
+                return [(self.r, self.c),(self.r,self.c+1)]
+            elif self.orientation ==  Orientation.LYING_V:
+                return [(self.r, self.c),(self.r+1,self.c)]
+        raise NotImplementedError
 
     def roll(self, direction: Direction) -> "Block":
         """
         Returns a new Block representing the position and orientation after moving.
-        Pure function: does NOT mutate self.
         """
         if self.is_split:
             return self._move_split(direction)
@@ -64,8 +64,7 @@ class Block:
     def _roll_standard(self, direction: Direction) -> "Block":
         """
         Standard 1x1x2 block rolling physics.
-        
-        Orientation transition table to implement:
+        Table of directions:
         -------------------------------------------------------------
         Current Orient | Direction | New Orient | New Anchor (r', c')
         -------------------------------------------------------------
@@ -85,8 +84,43 @@ class Block:
         LYING_V        | RIGHT     | LYING_V    | (r, c + 1)
         -------------------------------------------------------------
         """
-        # TODO [Member 1]: Implement the 12 orientation roll transitions using the table above.
-        raise NotImplementedError("Member 1: Implement _roll_standard transitions.")
+        match self.orientation:
+            case Orientation.STANDING:
+                if direction == "UP":
+                    self.orientation = Orientation.LYING_V
+                    self.r -= 2
+                elif direction == "DOWN":
+                    self.orientation = Orientation.LYING_V
+                    self.r += 1
+                elif direction == "LEFT":
+                    self.orientation = Orientation.LYING_H
+                    self.c -= 1
+                elif direction == "RIGHT":
+                    self.orientation = Orientation.LYING_H
+                    self.c += 2
+            case Orientation.LYING_H:
+                if direction == Direction.UP:
+                    self.r -= 1
+                elif direction == "DOWN":
+                    self.r += 1
+                elif direction == "LEFT":
+                    self.orientation = Orientation.STANDING
+                    self.c -= 1
+                elif direction == "RIGHT":
+                    self.orientation = Orientation.STANDING
+                    self.c += 2
+            case Orientation.LYING_V:
+                if direction == "UP":
+                    self.orientation = Orientation.STANDING
+                    self.r -= 1
+                elif direction == "DOWN":
+                    self.orientation = Orientation.STANDING
+                    self.r += 2
+                elif direction == "LEFT":
+                    self.c -= 1
+                elif direction == "RIGHT":
+                    self.c += 1
+        raise NotImplementedError()
 
     def _move_split(self, direction: Direction) -> "Block":
         """
@@ -99,7 +133,31 @@ class Block:
         2. Otherwise, move the active cube 1 unit in the specified direction.
         3. Check if cubes can merge using self._check_merge(cube1, cube2).
         """
-        # TODO [Member 1]: Implement split cube movement and spacebar switching.
+        if direction == Direction.SWITCH_CUBE:
+            self.is_split = not self.is_split
+        else:
+            if self.active_cube == 0:
+                match direction:
+                    case Direction.UP:
+                        self.cube1[0] -= 1
+                    case Direction.DOWN:
+                        self.cube1[0] += 1
+                    case Direction.LEFT:
+                        self.cube1[1] -= 1
+                    case Direction.RIGHT:
+                        self.cube1[1] += 1
+            else:
+                match direction:
+                    case Direction.UP:
+                        self.cube2[0] -= 1
+                    case Direction.DOWN:
+                        self.cube2[0] += 1
+                    case Direction.LEFT:
+                        self.cube2[1] -= 1
+                    case Direction.RIGHT:
+                        self.cube2[1] += 1
+
+
         raise NotImplementedError("Member 1: Implement _move_split.")
 
     @staticmethod
@@ -107,15 +165,12 @@ class Block:
         """
         If two 1x1x1 cubes are horizontally or vertically adjacent,
         merges them back into a single standard 1x1x2 block.
-        
-        Guidelines for Member 1:
-        - Horizontally adjacent (r1 == r2 and |c1 - c2| == 1):
-          returns Block(r1, min(c1, c2), Orientation.LYING_H, is_split=False)
-        - Vertically adjacent (c1 == c2 and |r1 - r2| == 1):
-          returns Block(min(r1, r2), c1, Orientation.LYING_V, is_split=False)
-        - Otherwise returns None.
+
         """
-        # TODO [Member 1]: Implement merge detection for adjacent cubes.
+        if (cube1[0] == cube2[0]) and (abs(cube1[1] - cube2[1]) == 1):
+            return Block(cube1[0], min(cube1[1], cube2[1]), Orientation.LYING_H, is_split=False)
+        if (cube1[1] == cube2[1]) and (abs(cube1[0] - cube2[0]) == 1):
+            return Block(min(cube1[0], cube2[0]), cube1[0], Orientation.LYING_V, is_split=False)
         raise NotImplementedError("Member 1: Implement _check_merge.")
 
     def split_into(self, target1: Tuple[int, int], target2: Tuple[int, int]) -> "Block":
