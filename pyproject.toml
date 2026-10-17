@@ -1,5 +1,9 @@
 [project]
 name = "project-1-experimenting-different-searching-methods-in-the-game-bloxorz"
 version = "0.1.0"
-requires-python = ">=3.14"
-dependencies = []
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "pygame>=2.5.0",
+    "matplotlib>=3.7.0",
+    "pytest>=7.4.0",
+]
