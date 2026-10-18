@@ -203,9 +203,15 @@ class BloxorzApp:
     def prev_stage(self):
         self.load_stage(self.current_stage_idx - 1)
 
-    def run_solver(self, solver):
+    def run_solver(self, solver) -> None:
         """
         Runs the chosen search solver and loads the solution path for replay.
+
+        Args:
+            solver (BFSSolver | DFSSolver | UCSSolver | AStarSolver): solver agent
+
+        Returns:
+            None
         
         Guidelines for Member 4:
         1. Call `result = solver.solve(self.env)`.
@@ -214,7 +220,20 @@ class BloxorzApp:
            Set `self.replay_states = result.states`, reset replay index, and start playback.
         """
         # TODO [Member 4]: Connect solver execution to replay controller and metrics.
-        raise NotImplementedError("Member 4: Implement run_solver handler.")
+        result = solver.solve(self.env)
+        self.last_result = result
+
+        if result.success and result.states:
+            self.replay_states = result.states
+            self.replay_timer = 0
+            self.is_lost = False
+
+            self.reset_replay()
+            self.toggle_replay()
+        else:
+            self.replay_states = []
+            self.is_replaying = False
+            self.btn_replay_toggle.text = "Play"
 
     def toggle_replay(self):
         """Toggles between Play and Pause during solution replay."""
@@ -226,6 +245,7 @@ class BloxorzApp:
     def step_forward_replay(self):
         """Steps forward one move in the solution sequence."""
         # TODO [Member 4]: Implement single-step forward in replay.
+        
         raise NotImplementedError("Member 4: Implement step_forward_replay.")
 
     def reset_replay(self):
@@ -250,7 +270,17 @@ class BloxorzApp:
            and check `self.is_won = self.state.is_goal(self.env.board)`.
         """
         # TODO [Member 4]: Implement manual keyboard roll handling and win/loss state updates.
-        raise NotImplementedError("Member 4: Implement handle_manual_move.")
+        if self.is_replaying or self.is_won or self.is_lost:
+            return
+
+        next_state = self.env.step(self.state, direction)
+
+        if next_state is None:
+            self.is_lost = True
+        else:
+            self.state = next_state
+            self.move_count += 1
+            self.is_won = self.state.is_goal(self.env.board)
 
     def run(self):
         """Main application game loop."""
