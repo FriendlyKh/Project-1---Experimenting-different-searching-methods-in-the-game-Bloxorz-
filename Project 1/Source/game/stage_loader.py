@@ -133,6 +133,3 @@ class StageLoader:
             bridges=bridges_dict,
             switches=switches_dict,
         )
-
-def test():
-    return None
