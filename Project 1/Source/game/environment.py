@@ -6,8 +6,8 @@ Handles action application, switch activation, bridge toggling, and successor ge
 """
 
 from typing import List, Tuple, Optional
-from .constants import Direction
-from .board import Board
+from .constants import Orientation, Direction, SwitchOperation, SwitchType
+from .board import Board, Switch
 from .state import GameState
 from .constants import SwitchType
 
@@ -45,41 +45,57 @@ class BloxorzEnv:
         else:
             return [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT]
 
+    @staticmethod
+    def _trigger_switch(sw: Switch, bridges: dict) -> None:
+        """Update link_bridge state when switch is active"""
+        for b_id in sw.linked_bridges:
+            if b_id in bridges:
+                if sw.operation == SwitchOperation.TOGGLE:
+                    bridges[b_id] = not bridges[b_id]
+                elif sw.operation == SwitchOperation.PERMANENT:
+                    bridges[b_id] = True
+
     def step(self, state: GameState, action: Direction) -> Optional[GameState]:
         """
         Applies an action to a state and returns the resulting successor state,
         or None if the move results in falling / invalid placement.
-        
-        Guidelines for Member 1:
-        1. Roll the block: `next_block = state.block.roll(action)`.
-        2. Copy current bridge states into a mutable dict.
-        3. Check switch triggers on all occupied cells:
-           - SOFT switch: triggered if any occupied cell lands on it.
-           - HEAVY switch: triggered ONLY if block is STANDING upright.
-           - SPLIT switch: triggered ONLY if standing upright; teleports and splits the block!
-           - For triggered switches, update linked bridges (toggle or permanent).
-        4. Construct candidate `GameState(next_block, tuple(bridges.items()))`.
-        5. Verify validity with `next_state.is_valid(self.board)`.
-           If valid, return `next_state`; otherwise return `None`.
         """
         next_block = state.block.roll(action)
-        curr_state = list(state.bridge_states)
-        switch = self.board.switches
-        #SOFT switch
-        for occupied_cells in next_block.occupied_cells():
-            if switch[occupied_cells[0]][occupied_cells[1]] == SwitchType.SOFT:
-                for linked in switch[occupied_cells[0]][occupied_cells[1]].linked_bridges:
-                    for b_id, bridge in self.board.bridges.items():
-                        if linked == b_id:
-                            pass
+        bridge_states = dict(state.bridge_states)
+        switches = self.board.switches
 
 
+        if action != Direction.SWITCH_CUBE:
+            if next_block.is_split:
+                occupied_cell = next_block.cube1 if next_block.active_cube == 0 else next_block.cube2
+                if occupied_cell in switches and switches[occupied_cell].type == SwitchType.SOFT:
+                    self._trigger_switch(switches[occupied_cell], bridge_states)
+            else:
+                for cell in next_block.occupied_cells():
+                    if cell in switches:
+                        sw = switches[cell]
+                        if sw.type == SwitchType.SOFT:
+                            self._trigger_switch(sw, bridge_states)
+                        elif sw.type == SwitchType.HEAVY and next_block.orientation == Orientation.STANDING:
+                            self._trigger_switch(sw, bridge_states)
+                        elif sw.type == SwitchType.SPLIT and next_block.orientation == Orientation.STANDING:
+                            if sw.split_targets is not None:
+                                #tele thi sw hien tai kich hoat neu la soft
+                                self._trigger_switch(sw, bridge_states)
+                                next_block = next_block.split_into(
+                                    tuple(sw.split_targets[0]),
+                                    tuple(sw.split_targets[1]),
+                                    )
+                            for split_cell in next_block.occupied_cells():
+                                    if split_cell in switches and switches[split_cell].type == SwitchType.SOFT:
+                                        self._trigger_switch(switches[split_cell], bridge_states)
+                            #End loop when succesfully split
+                            break
 
-
-
-
-
-        raise NotImplementedError("Member 1: Implement step transition model.")
+        next_state = GameState(block=next_block, bridge_states=tuple(bridge_states.items()))
+        if next_state.is_valid(self.board):
+            return next_state
+        return None
 
     def get_successors(
         self,
@@ -94,5 +110,9 @@ class BloxorzEnv:
         Iterate over self.get_legal_actions(state), call self.step(state, action),
         and collect non-None states with their step cost.
         """
-        # TODO [Member 1]: Implement successor generator for search solvers.
-        raise NotImplementedError("Member 1: Implement get_successors.")
+        successors = []
+
+        for action in self.get_legal_actions(state):
+            successors.append(tuple(action, self.step(state, action), step_cost_fn))
+
+        return successors

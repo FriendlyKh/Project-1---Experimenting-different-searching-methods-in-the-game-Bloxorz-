@@ -21,11 +21,11 @@ class GameState:
     def __init__(
         self,
         block: Block,
-        bridge_states: Tuple[Tuple[str, bool], ...],
+        bridge_states: Tuple[Tuple[str, bool], ...], #((id, is_open))
     ):
         self.block = block
         # Bridge states stored as canonical sorted tuple for consistent hashing
-        self.bridge_states = tuple(sorted(bridge_states, key=lambda x: x[0]))
+        self.bridge_states = tuple(sorted(bridge_states, key=lambda x: x[0])) #Sorted with id
         self._cached_hash: Optional[int] = None
         self._cached_dict: Optional[Dict[str, bool]] = None
 
@@ -74,15 +74,9 @@ class GameState:
     def __hash__(self) -> int:
         """
         Computes state hash for set() and dict lookups.
-        
-        Guidelines for Member 1:
-        Hash both the block state (via self.block.to_tuple()) AND the bridge states.
-        Cache the hash value in self._cached_hash for high performance during search!
         """
-        if getattr(self, '_cached_hash', None) is not None:
-            return self._cached_hash
-        bridge_state = tuple(self.bridges)
-        self._cached_hash = hash((self.block.to_tuple(), bridge_state))
+        if getattr(self, '_cached_hash', None) is None:
+            self._cached_hash = hash((self.block.to_tuple(), self.bridge_states))
         return self._cached_hash
 
     def __eq__(self, other: object) -> bool:
@@ -92,9 +86,6 @@ class GameState:
         if (GameState == type(other)) and (self.block == other.block) and (self.bridge_states == other.bridge_states):
             return True
         return False
-
-
-        raise NotImplementedError("Member 1: Implement __eq__.")
 
     def __repr__(self) -> str:
         return f"GameState(block={self.block}, bridges={dict(self.bridge_states)})"
