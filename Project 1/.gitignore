@@ -20,3 +20,4 @@ htmlcov/
 experiments/output/
 *.csv
 *.png
+*code-workspace
