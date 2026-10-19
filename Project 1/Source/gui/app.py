@@ -245,8 +245,10 @@ class BloxorzApp:
     def step_forward_replay(self):
         """Steps forward one move in the solution sequence."""
         # TODO [Member 4]: Implement single-step forward in replay.
-        
-        raise NotImplementedError("Member 4: Implement step_forward_replay.")
+        self.replay_idx += 1
+        self.state = self.replay_states[self.replay_idx]
+        self.move_count = self.replay_idx
+        self.is_won = self.state.is_goal(self.env.board)
 
     def reset_replay(self):
         """Resets replay back to the initial step."""
