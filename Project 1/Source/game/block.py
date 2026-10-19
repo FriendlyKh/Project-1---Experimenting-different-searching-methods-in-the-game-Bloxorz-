@@ -50,7 +50,6 @@ class Block:
                 return [(self.r, self.c),(self.r,self.c+1)]
             elif self.orientation ==  Orientation.LYING_V:
                 return [(self.r, self.c),(self.r+1,self.c)]
-        raise NotImplementedError
 
     def roll(self, direction: Direction) -> "Block":
         """
@@ -134,7 +133,7 @@ class Block:
         3. Check if cubes can merge using self._check_merge(cube1, cube2).
         """
         if direction == Direction.SWITCH_CUBE:
-            self.is_split = not self.is_split
+            self.active_cube = not self.active_cube
         else:
             if self.active_cube == 0:
                 match direction:
