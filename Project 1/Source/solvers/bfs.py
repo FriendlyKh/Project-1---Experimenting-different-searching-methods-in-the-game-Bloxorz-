@@ -54,4 +54,7 @@ class BFSSolver(BaseSolver):
         5. Return `(None, expanded, generated)` if queue becomes empty without reaching goal.
         """
         # TODO [Member 2]: Implement BFS using collections.deque and visited set.
-        raise NotImplementedError("Member 2: Implement BFS search logic here.")
+        from collections import deque
+
+        queue = deque()
+        
