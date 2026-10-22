@@ -5,7 +5,7 @@ Assigned to: Member 1 (Core Game Mechanics & State Modeling)
 Handles action application, switch activation, bridge toggling, and successor generation.
 """
 
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Callable
 from .constants import Orientation, Direction, SwitchOperation, SwitchType
 from .board import Board, Switch
 from .state import GameState
@@ -100,7 +100,7 @@ class BloxorzEnv:
     def get_successors(
         self,
         state: GameState,
-        step_cost_fn=None,
+        step_cost_fn: Optional[Callable[[GameState, Direction, GameState, Board], float]] = None,
     ) -> List[Tuple[Direction, GameState, float]]:
         """
         Generates all valid (action, successor_state, cost) tuples.
@@ -111,8 +111,16 @@ class BloxorzEnv:
         and collect non-None states with their step cost.
         """
         successors = []
-
+        
         for action in self.get_legal_actions(state):
-            successors.append(tuple(action, self.step(state, action), step_cost_fn))
+            next_state = self.step(state, action)
+
+            if step_cost_fn is not None:
+                step_cost = float(step_cost_fn(state, action, next_state, self.board))
+            else:
+                step_cost = 1.0
+
+            if next_state is not None:
+                successors.append((action, next_state, step_cost))
 
         return successors
