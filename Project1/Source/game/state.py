@@ -43,17 +43,15 @@ class GameState:
         - A block that merely lies across the goal cell does NOT win.
         - A single split cube CANNOT complete the stage (Section 2.5).
         """
-
-        #Split therefore cant be goaled
+        # Khối đang tách (split) thì không thể thắng
         if self.block.is_split:
             return False
-        else:
-            if self.block.orientation == Orientation.STANDING:
-                if (self.block.r, self.block.c) == board.goal_pos:
-                    return True
+        return (
+            self.block.orientation == Orientation.STANDING
+            and (self.block.r, self.block.c) == board.goal_pos
+        )
 
-        raise NotImplementedError("Member 1: Implement is_goal check.")
-
+        return False
     def is_valid(self, board: Board) -> bool:
         """
         Validates if the current state is physically supported and legal:
