@@ -154,9 +154,6 @@ class Block:
             active_cube=self.active_cube,
         )
 
-        t1 = tuple(new_c1)
-        t2 = tuple(new_c2)
-
 
     @staticmethod
     def _check_merge(cube1: Tuple[int, int], cube2: Tuple[int, int]) -> Optional["Block"]:
@@ -177,14 +174,21 @@ class Block:
             cube2=target2,
             active_cube=0,
         )
-
+    
     def to_tuple(self) -> tuple:
         """Returns canonical tuple for hashing in GameState."""
         if self.is_split:
-            sorted_cubes = tuple(sorted([self.cube1, self.cube2]))
-            return ("SPLIT", sorted_cubes, self.active_cube)
+            active_pos = self.cube1 if self.active_cube == 0 else self.cube2
+            return ("SPLIT", tuple(sorted([self.cube1, self.cube2])), active_pos)
         return ("STANDARD", self.r, self.c, self.orientation.value)
 
+
+    def __eq__(self, other):
+        return isinstance(other, Block) and self.to_tuple() == other.to_tuple()
+
+    def __hash__(self):
+        return hash(self.to_tuple())
+    
     def __repr__(self) -> str:
         if self.is_split:
             return f"Block(SPLIT, c1={self.cube1}, c2={self.cube2}, active={self.active_cube})"

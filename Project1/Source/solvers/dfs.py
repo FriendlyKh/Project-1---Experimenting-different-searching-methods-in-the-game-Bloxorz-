@@ -24,41 +24,11 @@ class DFSSolver(BaseSolver):
 
     def _get_successors(self, env: BloxorzEnv, node: SearchNode) -> list[SearchNode]:
         """Helper to generate child SearchNodes compatibly across common base setups."""
-        if hasattr(node, "expand"):
-            return node.expand(env)
-
-        children = []
-        if hasattr(env, "get_successors"):
-            transitions = env.get_successors(node.state)
-        elif hasattr(env, "successors"):
-            transitions = env.successors(node.state)
-        else:
-            transitions = [
-                (action, env.step(node.state, action))
-                for action in env.get_legal_actions(node.state)
-            ]
-
-        for item in transitions:
-            # Handle both (action, next_state) and (next_state, action, cost) formats
-            if len(item) == 2:
-                first, second = item
-                if isinstance(first, str) or hasattr(first, "name"):
-                    action, next_state = first, second
-                else:
-                    next_state, action = first, second
-                cost = 1
-            else:
-                next_state, action, cost = item[0], item[1], item[2]
-
-            child = SearchNode(
-                state=next_state,
-                parent=node,
-                action=action,
-                depth=node.depth + 1,
-                path_cost=getattr(node, "path_cost", node.depth) + cost,
-            )
-            children.append(child)
-        return children
+        return [
+            SearchNode(state=ns, parent=node, action=a,
+                    g_cost=node.g_cost + c, depth=node.depth + 1)
+            for a, ns, c in env.get_successors(node.state)
+        ]
 
     def _search(
             self,
