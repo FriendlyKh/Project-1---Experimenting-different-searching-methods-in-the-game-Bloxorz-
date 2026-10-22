@@ -91,6 +91,6 @@ class BFSSolver(BaseSolver):
                         return (child_node, expanded_nodes_count, generated_nodes_count)
 
                     frontier.append(child_node)
-                    visited.add(child_node)
+                    visited.add(next_state)
 
         return (None, expanded_nodes_count, generated_nodes_count)

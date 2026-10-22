@@ -15,7 +15,7 @@ from .base import BaseSolver, SearchNode
 from ..game.environment import BloxorzEnv
 from ..game.state import GameState
 from ..game.board import Board
-from ..game.constants import Direction
+from ..game.constants import Direction, TileType
 from ..game.block import Block
 
 
@@ -30,27 +30,43 @@ def default_cost_function(
     """
     return 1.0
 
-
 def custom_cost_function(
     state: GameState,
     action: Direction,
     next_state: GameState,
     board: Board,
 ) -> float:
-    """
-    Non-uniform cost function (Section 3.4).
-    
-    Guidelines for Member 3:
-    Design a meaningful cost function and justify it in your report!
-    Examples of intuitions:
-    - Base roll cost = 1.0
-    - Fragile tile penalty: moving onto fragile (orange) tiles costs +2.0 (higher risk of falling).
-    - Switch toggle bonus: triggering a switch costs 0.5 (incentivizes unlocking bridges).
-    - Split cube coordination: moving unit cubes has a slight penalty (+0.2).
-    """
-    cost = 1
-    # TODO [Member 3]: Define your customized, well-justified cost function here.
-    raise NotImplementedError("Member 3: Implement custom cost function here.")
+    # --- Cost model parameters (Section 3.4) ---
+    BASE_MOVE_COST = 1.0        # một lần lăn / một bước của cube
+    FRAGILE_PENALTY = 2.0       # có phần nào của block nằm trên ô cam (fragile)
+    SWITCH_EVENT_COST = 0.5     # nước đi kích hoạt công tắc: thay cho base cost
+    SPLIT_MOVE_PENALTY = 0.2    # di chuyển cube 1x1x1 khi đang tách đôi
+    SWITCH_CUBE_COST = 0.3      # đổi quyền điều khiển sang cube còn lại
+        # Đổi cube: không lăn, không chạm ô mới, không kích hoạt công tắc.
+
+    if action == Direction.SWITCH_CUBE:
+        return SWITCH_CUBE_COST
+
+    cost = BASE_MOVE_COST
+
+    # Sự kiện công tắc: bridge đổi trạng thái hoặc block vừa bị tách đôi.
+    bridge_changed = state.bridge_states != next_state.bridge_states
+    just_split = next_state.block.is_split and not state.block.is_split
+    if bridge_changed or just_split:
+        cost = SWITCH_EVENT_COST
+
+    # Rủi ro địa hình: có phần nào của block trên ô fragile.
+    if any(
+        board.get_base_tile(r, c) == TileType.FRAGILE
+        for r, c in next_state.block.occupied_cells()
+    ):
+        cost += FRAGILE_PENALTY
+
+    # Chi phí phối hợp khi đang tách đôi.
+    if state.block.is_split:
+        cost += SPLIT_MOVE_PENALTY
+
+    return cost
 
 
 class UCSSolver(BaseSolver):
