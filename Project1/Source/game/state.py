@@ -46,11 +46,10 @@ class GameState:
         # Khối đang tách (split) thì không thể thắng
         if self.block.is_split:
             return False
-
-        # Khối chuẩn phải đứng thẳng (STANDING) và trùng khớp vị trí với goal_pos
-        if (self.block.orientation == Orientation.STANDING and
-                (self.block.r, self.block.c) == board.goal_pos):
-            return True
+        return (
+            self.block.orientation == Orientation.STANDING
+            and (self.block.r, self.block.c) == board.goal_pos
+        )
 
         return False
     def is_valid(self, board: Board) -> bool:
