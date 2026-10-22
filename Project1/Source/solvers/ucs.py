@@ -48,6 +48,7 @@ def custom_cost_function(
     - Switch toggle bonus: triggering a switch costs 0.5 (incentivizes unlocking bridges).
     - Split cube coordination: moving unit cubes has a slight penalty (+0.2).
     """
+    cost = 1
     # TODO [Member 3]: Define your customized, well-justified cost function here.
     raise NotImplementedError("Member 3: Implement custom cost function here.")
 
@@ -90,15 +91,16 @@ class UCSSolver(BaseSolver):
         initial_state = env.get_initial_state()
         start_node = SearchNode(initial_state)
 
+        id_cnt = 0
         nodes_expanded = 0 # Number of Node pop from frontier and get_successor
         nodes_generated = 0 # Number of Node push into frontier
         
         frontier = [] # [GameState, cost]
         best_g_cost = {initial_state: 0} #Dict[GameState, float]
-        heapq.heappush(frontier, (start_node)) #SearchNode has comparasion method
+        heapq.heappush(frontier, start_node) #SearchNode has comparasion method
 
         while frontier and (time.perf_counter() - start_time) < timeout:
-            cur_node, cur_cost = heapq.heappop(frontier)
+            cur_node = heapq.heappop(frontier)
             cur_state = cur_node.state
 
             # Lazy deletion
@@ -111,12 +113,11 @@ class UCSSolver(BaseSolver):
             nodes_expanded += 1
  
             for action, next_state, step_cost in env.get_successors(cur_state, self.cost_fn):
-                new_g = cur_cost + step_cost
+                new_g = cur_node.g_cost + step_cost
 
                 if new_g < best_g_cost.get(next_state, float('inf')):
                     best_g_cost[next_state] = new_g
                     nodes_generated += 1
-                    id_cnt += 1
 
                     next_node = SearchNode(
                         state = next_state, 
@@ -128,7 +129,8 @@ class UCSSolver(BaseSolver):
                         node_id = nodes_generated,
                         )
                     
-                    heapq.heappush(frontier, (next_node, new_g))
+                    heapq.heappush(frontier, next_node)
+                    print(frontier)
 
 
         return (None, nodes_expanded, nodes_generated) # Cant find goal or timeout

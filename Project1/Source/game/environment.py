@@ -118,7 +118,6 @@ class BloxorzEnv:
 
         for action in self.get_legal_actions(state):
             next_state = self.step(state, action)
-
             if next_state is not None:
                 if step_cost_fn is not None:
                     step_cost = float(step_cost_fn(state, action, next_state, self.board))
