@@ -269,6 +269,7 @@ class BloxorzApp:
         self.move_count = 0
         self.is_won = False
 
+  #bug loi l
     def handle_manual_move(self, direction: Direction):
         """
         Processes keyboard move from human player (Arrow keys, Spacebar).
@@ -282,9 +283,7 @@ class BloxorzApp:
         # TODO [Member 4]: Implement manual keyboard roll handling and win/loss state updates.
         if self.is_replaying or self.is_won or self.is_lost:
             return
-
         next_state = self.env.step(self.state, direction)
-
         if next_state is None:
             self.is_lost = True
         else:

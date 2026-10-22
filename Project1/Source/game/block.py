@@ -20,14 +20,14 @@ class Block:
     """
 
     def __init__(
-        self,
-        r: int,
-        c: int,
-        orientation: Orientation = Orientation.STANDING,
-        is_split: bool = False,
-        cube1: Optional[Tuple[int, int]] = None,
-        cube2: Optional[Tuple[int, int]] = None,
-        active_cube: int = 0,
+            self,
+            r: int,
+            c: int,
+            orientation: Orientation = Orientation.STANDING,
+            is_split: bool = False,
+            cube1: Optional[Tuple[int, int]] = None,
+            cube2: Optional[Tuple[int, int]] = None,
+            active_cube: int = 0,
     ):
         self.r = r
         self.c = c
@@ -42,14 +42,14 @@ class Block:
         Returns list of (row, col) coordinates currently occupied by the block.
         """
         if self.is_split:
-            return [self.cube1,self.cube2]
+            return [self.cube1, self.cube2]
         else:
             if self.orientation == Orientation.STANDING:
                 return [(self.r, self.c)]
-            if self.orientation ==  Orientation.LYING_H:
-                return [(self.r, self.c),(self.r,self.c+1)]
-            elif self.orientation ==  Orientation.LYING_V:
-                return [(self.r, self.c),(self.r+1,self.c)]
+            if self.orientation == Orientation.LYING_H:
+                return [(self.r, self.c), (self.r, self.c + 1)]
+            elif self.orientation == Orientation.LYING_V:
+                return [(self.r, self.c), (self.r + 1, self.c)]
 
     def roll(self, direction: Direction) -> "Block":
         """
@@ -63,114 +63,110 @@ class Block:
     def _roll_standard(self, direction: Direction) -> "Block":
         """
         Standard 1x1x2 block rolling physics.
-        Table of directions:
-        -------------------------------------------------------------
-        Current Orient | Direction | New Orient | New Anchor (r', c')
-        -------------------------------------------------------------
-        STANDING       | UP        | LYING_V    | (r - 2, c)
-        STANDING       | DOWN      | LYING_V    | (r + 1, c)
-        STANDING       | LEFT      | LYING_H    | (r, c - 2)
-        STANDING       | RIGHT     | LYING_H    | (r, c + 1)
-        -------------------------------------------------------------
-        LYING_H        | UP        | LYING_H    | (r - 1, c)
-        LYING_H        | DOWN      | LYING_H    | (r + 1, c)
-        LYING_H        | LEFT      | STANDING   | (r, c - 1)
-        LYING_H        | RIGHT     | STANDING   | (r, c + 2)
-        -------------------------------------------------------------
-        LYING_V        | UP        | STANDING   | (r - 1, c)
-        LYING_V        | DOWN      | STANDING   | (r + 2, c)
-        LYING_V        | LEFT      | LYING_V    | (r, c - 1)
-        LYING_V        | RIGHT     | LYING_V    | (r, c + 1)
-        -------------------------------------------------------------
         """
-        match self.orientation:
+        # Tạo bản sao (hoặc dùng trực tiếp nếu muốn mutable, nhưng trả về bản sao mới an toàn hơn cho search)
+        # Ở đây giữ logic của bạn nhưng tạo object mới để tránh ghi đè state cũ nếu cần
+        new_block = Block(self.r, self.c, self.orientation, self.is_split, self.cube1, self.cube2, self.active_cube)
+
+        match new_block.orientation:
             case Orientation.STANDING:
-                if direction == "UP":
-                    self.orientation = Orientation.LYING_V
-                    self.r -= 2
-                elif direction == "DOWN":
-                    self.orientation = Orientation.LYING_V
-                    self.r += 1
-                elif direction == "LEFT":
-                    self.orientation = Orientation.LYING_H
-                    self.c -= 1
-                elif direction == "RIGHT":
-                    self.orientation = Orientation.LYING_H
-                    self.c += 2
+                if direction == "UP" or direction == Direction.UP:
+                    new_block.orientation = Orientation.LYING_V
+                    new_block.r -= 2
+                elif direction == "DOWN" or direction == Direction.DOWN:
+                    new_block.orientation = Orientation.LYING_V
+                    new_block.r += 1
+                elif direction == "LEFT" or direction == Direction.LEFT:
+                    new_block.orientation = Orientation.LYING_H
+                    new_block.c -= 2
+                elif direction == "RIGHT" or direction == Direction.RIGHT:
+                    new_block.orientation = Orientation.LYING_H
+                    new_block.c += 1
             case Orientation.LYING_H:
-                if direction == Direction.UP:
-                    self.r -= 1
-                elif direction == "DOWN":
-                    self.r += 1
-                elif direction == "LEFT":
-                    self.orientation = Orientation.STANDING
-                    self.c -= 1
-                elif direction == "RIGHT":
-                    self.orientation = Orientation.STANDING
-                    self.c += 2
+                if direction == "UP" or direction == Direction.UP:
+                    new_block.r -= 1
+                elif direction == "DOWN" or direction == Direction.DOWN:
+                    new_block.r += 1
+                elif direction == "LEFT" or direction == Direction.LEFT:
+                    new_block.orientation = Orientation.STANDING
+                    new_block.c -= 1
+                elif direction == "RIGHT" or direction == Direction.RIGHT:
+                    new_block.orientation = Orientation.STANDING
+                    new_block.c += 2
             case Orientation.LYING_V:
-                if direction == "UP":
-                    self.orientation = Orientation.STANDING
-                    self.r -= 1
-                elif direction == "DOWN":
-                    self.orientation = Orientation.STANDING
-                    self.r += 2
-                elif direction == "LEFT":
-                    self.c -= 1
-                elif direction == "RIGHT":
-                    self.c += 1
-        raise NotImplementedError()
+                if direction == "UP" or direction == Direction.UP:
+                    new_block.orientation = Orientation.STANDING
+                    new_block.r -= 1
+                elif direction == "DOWN" or direction == Direction.DOWN:
+                    new_block.orientation = Orientation.STANDING
+                    new_block.r += 2
+                elif direction == "LEFT" or direction == Direction.LEFT:
+                    new_block.c -= 1
+                elif direction == "RIGHT" or direction == Direction.RIGHT:
+                    new_block.c += 1
+        return new_block
 
     def _move_split(self, direction: Direction) -> "Block":
         """
         Moves the currently active 1x1x1 cube or switches active cube.
         Checks for rejoining into a 1x1x2 block when cubes become adjacent.
-        
-        Guidelines for Member 1:
-        1. If direction == Direction.SWITCH_CUBE:
-           Toggle active cube index (0 -> 1 or 1 -> 0).
-        2. Otherwise, move the active cube 1 unit in the specified direction.
-        3. Check if cubes can merge using self._check_merge(cube1, cube2).
         """
+        # Tạo bản sao các thuộc tính để không làm hỏng state hiện tại khi chưa chắc chắn hợp lệ
+        new_c1 = list(self.cube1)
+        new_c2 = list(self.cube2)
+        new_active = self.active_cube
+
         if direction == Direction.SWITCH_CUBE:
-            self.active_cube = not self.active_cube
+            new_active = 1 - self.active_cube
         else:
-            if self.active_cube == 0:
-                match direction:
-                    case Direction.UP:
-                        self.cube1[0] -= 1
-                    case Direction.DOWN:
-                        self.cube1[0] += 1
-                    case Direction.LEFT:
-                        self.cube1[1] -= 1
-                    case Direction.RIGHT:
-                        self.cube1[1] += 1
+            if new_active == 0:
+                if direction == Direction.UP:
+                    new_c1[0] -= 1
+                elif direction == Direction.DOWN:
+                    new_c1[0] += 1
+                elif direction == Direction.LEFT:
+                    new_c1[1] -= 1
+                elif direction == Direction.RIGHT:
+                    new_c1[1] += 1
             else:
-                match direction:
-                    case Direction.UP:
-                        self.cube2[0] -= 1
-                    case Direction.DOWN:
-                        self.cube2[0] += 1
-                    case Direction.LEFT:
-                        self.cube2[1] -= 1
-                    case Direction.RIGHT:
-                        self.cube2[1] += 1
+                if direction == Direction.UP:
+                    new_c2[0] -= 1
+                elif direction == Direction.DOWN:
+                    new_c2[0] += 1
+                elif direction == Direction.LEFT:
+                    new_c2[1] -= 1
+                elif direction == Direction.RIGHT:
+                    new_c2[1] += 1
 
+        t1 = tuple(new_c1)
+        t2 = tuple(new_c2)
 
-        raise NotImplementedError("Member 1: Implement _move_split.")
+        # Kiểm tra xem sau khi di chuyển, 2 khối có gộp lại được không
+        merged_block = self._check_merge(t1, t2)
+        if merged_block is not None:
+            return merged_block
+
+        # Nếu không gộp, trả về trạng thái split mới
+        return Block(
+            r=t1[0], c=t1[1],
+            orientation=Orientation.STANDING,
+            is_split=True,
+            cube1=t1,
+            cube2=t2,
+            active_cube=new_active
+        )
 
     @staticmethod
     def _check_merge(cube1: Tuple[int, int], cube2: Tuple[int, int]) -> Optional["Block"]:
         """
         If two 1x1x1 cubes are horizontally or vertically adjacent,
         merges them back into a single standard 1x1x2 block.
-
         """
         if (cube1[0] == cube2[0]) and (abs(cube1[1] - cube2[1]) == 1):
             return Block(cube1[0], min(cube1[1], cube2[1]), Orientation.LYING_H, is_split=False)
         if (cube1[1] == cube2[1]) and (abs(cube1[0] - cube2[0]) == 1):
-            return Block(min(cube1[0], cube2[0]), cube1[0], Orientation.LYING_V, is_split=False)
-        raise NotImplementedError("Member 1: Implement _check_merge.")
+            return Block(min(cube1[0], cube2[0]), cube1[1], Orientation.LYING_V, is_split=False)
+        return None
 
     def split_into(self, target1: Tuple[int, int], target2: Tuple[int, int]) -> "Block":
         """Teleports and splits the block into two 1x1x1 unit cubes."""
