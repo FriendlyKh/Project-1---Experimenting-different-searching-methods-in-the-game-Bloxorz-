@@ -8,12 +8,15 @@ Project Requirements (Section 3.4):
   (If every move costs 1, UCS reduces to BFS; design a meaningful cost model).
 """
 
+import time
+import heapq
 from typing import Optional, Tuple, Callable
 from .base import BaseSolver, SearchNode
 from ..game.environment import BloxorzEnv
 from ..game.state import GameState
 from ..game.board import Board
 from ..game.constants import Direction
+from ..game.block import Block
 
 
 def default_cost_function(
@@ -82,5 +85,50 @@ class UCSSolver(BaseSolver):
              - Update `best_g_costs[next_state] = new_g`.
              - Push child node onto the priority queue.
         """
-        # TODO [Member 3]: Implement UCS with heapq and priority queue.
-        raise NotImplementedError("Member 3: Implement UCS search logic here.")
+        start_time = time.perf_counter()
+
+        initial_state = env.get_initial_state()
+        start_node = SearchNode(initial_state)
+
+        nodes_expanded = 0 # Number of Node pop from frontier and get_successor
+        nodes_generated = 0 # Number of Node push into frontier
+        
+        frontier = [] # [GameState, cost]
+        best_g_cost = {initial_state: 0} #Dict[GameState, float]
+        heapq.heappush(frontier, (start_node)) #SearchNode has comparasion method
+
+        while frontier and (time.perf_counter() - start_time) < timeout:
+            cur_node, cur_cost = heapq.heappop(frontier)
+            cur_state = cur_node.state
+
+            # Lazy deletion
+            if cur_node.g_cost > best_g_cost.get(cur_state, float("inf")):
+                continue
+
+            if cur_state.is_goal(env.board):
+                return cur_node, nodes_expanded, nodes_generated
+            
+            nodes_expanded += 1
+ 
+            for action, next_state, step_cost in env.get_successors(cur_state, self.cost_fn):
+                new_g = cur_cost + step_cost
+
+                if new_g < best_g_cost.get(next_state, float('inf')):
+                    best_g_cost[next_state] = new_g
+                    nodes_generated += 1
+                    id_cnt += 1
+
+                    next_node = SearchNode(
+                        state = next_state, 
+                        parent = cur_node, 
+                        action = action,
+                        g_cost = new_g,
+                        h_cost = 0,
+                        depth = cur_node.depth + 1,
+                        node_id = nodes_generated,
+                        )
+                    
+                    heapq.heappush(frontier, (next_node, new_g))
+
+
+        return (None, nodes_expanded, nodes_generated) # Cant find goal or timeout
