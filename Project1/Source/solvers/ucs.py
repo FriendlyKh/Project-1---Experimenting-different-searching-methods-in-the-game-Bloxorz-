@@ -80,7 +80,7 @@ class UCSSolver(BaseSolver):
         name: str = "UCS",
     ):
         super().__init__(name=name)
-        self.cost_fn = cost_fn if cost_fn is not None else default_cost_function
+        self.cost_fn = cost_fn if cost_fn is not None else custom_cost_function
 
     def _search(
         self,
@@ -146,7 +146,6 @@ class UCSSolver(BaseSolver):
                         )
                     
                     heapq.heappush(frontier, next_node)
-                    print(frontier)
 
 
         return (None, nodes_expanded, nodes_generated) # Cant find goal or timeout
