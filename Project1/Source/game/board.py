@@ -49,6 +49,7 @@ class Board:
         start_pos: Tuple[int, int],
         bridges: Optional[Dict[str, Bridge]] = None,
         switches: Optional[Dict[Tuple[int, int], Switch]] = None,
+        name: str = "",
     ):
         self.rows = rows
         self.cols = cols
@@ -57,7 +58,7 @@ class Board:
         self.start_pos = start_pos
         self.bridges = bridges or {}
         self.switches = switches or {}
-
+        self.name = name
         # Precompute mapping from cell coordinate to bridge_id for quick lookups
         self.cell_to_bridge: Dict[Tuple[int, int], str] = {}
         for b_id, bridge in self.bridges.items():
