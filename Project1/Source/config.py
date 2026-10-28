@@ -2,7 +2,6 @@
 Global configurations, cute & bright color palette, 3D camera defaults,
 and animation constants for the Bloxorz Solver & Algorithm Visualizer project.
 """
-
 from pathlib import Path
 
 # Base Paths
@@ -14,6 +13,7 @@ OUTPUT_DIR = EXPERIMENTS_DIR / "output"
 # Window / GUI Settings
 SCREEN_WIDTH = 1180
 SCREEN_HEIGHT = 760
+
 FPS = 60
 TILE_SIZE = 48  # default pixels per cell
 SIDEBAR_WIDTH = 350

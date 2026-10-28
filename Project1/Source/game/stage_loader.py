@@ -132,4 +132,5 @@ class StageLoader:
             start_pos=start_pos,
             bridges=bridges_dict,
             switches=switches_dict,
+            name=data.get("name", ""),
         )

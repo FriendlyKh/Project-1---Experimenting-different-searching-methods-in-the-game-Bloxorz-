@@ -15,6 +15,8 @@ from collections import deque
 from pathlib import Path
 from typing import List, Optional, Dict, Tuple
 import pygame
+import json
+import re
 
 from ..config import (
     SCREEN_WIDTH,
@@ -59,6 +61,16 @@ from .renderer import GameRenderer
 from .widgets import Button, ModeToggleSwitch, draw_pastel_card
 
 
+def _stage_sort_key(path):
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            name = json.load(f).get("name", "")
+    except Exception:
+        name = ""
+    m = re.search(r"\d+", name)
+    return (int(m.group()) if m else 10**9, path.name)
+
+
 class BloxorzApp:
     """
     Interactive Cute & Bright GUI application for Bloxorz Solver & 3D/2D Algorithm Visualizer.
@@ -81,7 +93,7 @@ class BloxorzApp:
 
         # Stage management
         self.stages_dir = stages_dir or STAGES_DIR
-        self.stage_files = sorted(list(self.stages_dir.glob("*.json")))
+        self.stage_files = sorted(self.stages_dir.glob("*.json"), key=_stage_sort_key)
         if not self.stage_files:
             raise RuntimeError(f"No stage JSON files found in {self.stages_dir}")
         self.current_stage_idx = 0
@@ -352,6 +364,15 @@ class BloxorzApp:
             self.btn_cam_reset,
         ]
 
+        self.cam_buttons = [
+            self.btn_cam_zoom_in,
+            self.btn_cam_zoom_out,
+            self.btn_cam_orbit_l,
+            self.btn_cam_orbit_r,
+            self.btn_cam_tilt,
+            self.btn_cam_reset,
+        ]
+
         self.buttons = [
             self.btn_prev_stage,
             self.btn_restart,
@@ -433,9 +454,7 @@ class BloxorzApp:
         self.level_transition_t = 0.0  # starts the timer
         # Give the renderer the name it should display in the swipe panel
         stage_file = self.stage_files[self._pending_stage_idx]
-        self.renderer._transition_stage_name = (
-            stage_file.stem.replace("_", " ").title()
-        )
+        self.renderer._transition_stage_name = self._get_stage_display_name(self._pending_stage_idx)
 
 
     def _finish_level_transition(self):
@@ -450,6 +469,16 @@ class BloxorzApp:
     def prev_stage(self):
         self._start_level_transition(self.current_stage_idx - 1, direction=-1)
 
+    def _get_stage_display_name(self, idx: int) -> str:
+        path = self.stage_files[idx % len(self.stage_files)]
+        cache = self.__dict__.setdefault("_stage_name_cache", {})
+        if path not in cache:
+            try:
+                with open(path, "r", encoding="utf-8") as f:
+                    cache[path] = json.load(f).get("name") or path.stem.replace("_", " ").title()
+            except Exception:
+                cache[path] = path.stem.replace("_", " ").title()
+        return cache[path]
 
     def _compute_explored_cells(self, max_states: int, path_states: List[GameState]) -> Dict[Tuple[int, int], int]:
         """Builds a cell visitation map `(r, c) -> order` for the search space heatmap."""
@@ -784,12 +813,12 @@ class BloxorzApp:
         title_surf = self.font_title.render("Bloxorz AI Studio", True, COLOR_TEXT_ACCENT)
         self.screen.blit(title_surf, (inner_x, 20))
 
-        stage_name = self.stage_files[self.current_stage_idx].stem.replace("_", " ").title()
+        stage_name = self._get_stage_display_name(self.current_stage_idx)
         stage_pill = pygame.Rect(inner_x, 52, card_w - 16, 26)
         pygame.draw.rect(self.screen, (255, 255, 255), stage_pill, border_radius=8)
         pygame.draw.rect(self.screen, (238, 206, 198), stage_pill, width=1, border_radius=8)
         stage_lbl = self.font_bold.render(
-            f"Stage {self.current_stage_idx + 1}/{len(self.stage_files)}: {stage_name}",
+            f"{stage_name}  ({self.current_stage_idx + 1}/{len(self.stage_files)})",
             True,
             COLOR_TEXT,
         )
