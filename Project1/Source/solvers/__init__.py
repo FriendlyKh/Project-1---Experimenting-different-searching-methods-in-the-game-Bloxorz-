@@ -22,7 +22,7 @@ __all__ = [
     "IDSSolver",
     "UCSSolver",
     "default_cost_function",
-    "custom-cost-function",
+    "custom_cost_function",
     "AStarSolver",
     "manhattan_heuristic",
     "orientation_aware_heuristic",
