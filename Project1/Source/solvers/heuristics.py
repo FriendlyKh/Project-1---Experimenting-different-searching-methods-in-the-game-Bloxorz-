@@ -100,7 +100,7 @@ class RelaxedBFSHeuristic:
                 self.distances.get(cell, 100) for cell in state.block.occupied_cells()
             )
             h = min_dist / 2.0
-            if state.block.orientation != Orientation.STADING:
+            if state.block.orientation != Orientation.STANDING:
                 h += 0.5
                 
             return h
