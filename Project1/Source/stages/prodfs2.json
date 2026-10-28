@@ -1,0 +1,109 @@
+{
+  "name": "Pro-DFS 02 - The Deep Braid",
+  "grid": [
+    "01111111111111111110",
+    "01001001001001001010",
+    "01001001001001001010",
+    "01111111111111111112",
+    "01001001001001001010",
+    "01001001001001001010",
+    "01111111111111111110",
+    "44440000000000000000"
+  ],
+  "start": [
+    3,
+    1
+  ],
+  "goal": [
+    3,
+    19
+  ],
+  "bridges": [
+    {
+      "id": "B1",
+      "cells": [
+        [
+          7,
+          0
+        ]
+      ],
+      "initially_open": false
+    },
+    {
+      "id": "B2",
+      "cells": [
+        [
+          7,
+          1
+        ]
+      ],
+      "initially_open": false
+    },
+    {
+      "id": "B3",
+      "cells": [
+        [
+          7,
+          2
+        ]
+      ],
+      "initially_open": false
+    },
+    {
+      "id": "B4",
+      "cells": [
+        [
+          7,
+          3
+        ]
+      ],
+      "initially_open": false
+    }
+  ],
+  "switches": [
+    {
+      "pos": [
+        0,
+        4
+      ],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": [
+        "B1"
+      ]
+    },
+    {
+      "pos": [
+        6,
+        4
+      ],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": [
+        "B2"
+      ]
+    },
+    {
+      "pos": [
+        0,
+        10
+      ],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": [
+        "B3"
+      ]
+    },
+    {
+      "pos": [
+        6,
+        10
+      ],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": [
+        "B4"
+      ]
+    }
+  ]
+}
