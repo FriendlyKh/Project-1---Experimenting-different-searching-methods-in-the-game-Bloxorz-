@@ -20,7 +20,7 @@ try:
     from game.environment import BloxorzEnv
     from solvers.bfs import BFSSolver
     from solvers.dfs import DFSSolver, IDSSolver
-    from solvers.ucs import UCSSolver, default_cost_function
+    from solvers.ucs import UCSSolver, default_cost_function, custom_cost_function
     from solvers.astar import AStarSolver
     from solvers.heuristics import manhattan_heuristic, orientation_aware_heuristic
 except ImportError:
@@ -77,13 +77,13 @@ def run_cli_solver(
         "orientation": orientation_aware_heuristic,
     }
     heuristic_fn = heuristics.get(heuristic_name.lower(), manhattan_heuristic)
-
+    cost_fn = custom_cost_function if cost_name.lower() == "custom" else default_cost_function
     # Solvers dictionary
     solvers = {
         "bfs": BFSSolver(),
         "dfs": DFSSolver(),
         "ids": IDSSolver(),
-        "ucs": UCSSolver(cost_fn=default_cost_function),
+        "ucs": UCSSolver(cost_fn=cost_fn),
         "astar": AStarSolver(heuristic_fn=heuristic_fn),
     }
 

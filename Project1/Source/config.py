@@ -2,7 +2,6 @@
 Global configurations, cute & bright color palette, 3D camera defaults,
 and animation constants for the Bloxorz Solver & Algorithm Visualizer project.
 """
-import tkinter as _tk
 from pathlib import Path
 
 # Base Paths
@@ -12,10 +11,8 @@ EXPERIMENTS_DIR = SOURCE_DIR / "experiments"
 OUTPUT_DIR = EXPERIMENTS_DIR / "output"
 
 # Window / GUI Settings
-root = _tk.Tk()
-SCREEN_WIDTH = root.winfo_screenwidth()
-SCREEN_HEIGHT = root.winfo_screenheight()
-root.destroy()
+SCREEN_WIDTH = 1180
+SCREEN_HEIGHT = 760
 
 FPS = 60
 TILE_SIZE = 48  # default pixels per cell
