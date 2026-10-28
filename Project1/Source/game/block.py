@@ -93,26 +93,6 @@ class Block:
             return Block(r, c, self.orientation)
 
     def _move_split(self, direction: Direction) -> "Block":
-        """
-        Moves the currently active 1x1x1 cube or switches active cube.
-        Checks for rejoining into a 1x1x2 block when cubes become adjacent.
-        """
-        # Tạo bản sao các thuộc tính để không làm hỏng state hiện tại khi chưa chắc chắn hợp lệ
-        new_c1 = list(self.cube1)
-        new_c2 = list(self.cube2)
-        new_active = self.active_cube
-
-        if direction == Direction.SWITCH_CUBE:
-            return Block(
-                r=self.r,
-                c=self.c,
-                orientation=self.orientation,
-                is_split=True,
-                cube1=self.cube1,
-                cube2=self.cube2,
-                active_cube=1 - self.active_cube,
-            )
-    def _move_split(self, direction: Direction) -> "Block":
         if direction == Direction.SWITCH_CUBE:
             return Block(
                 r=self.r,
