@@ -1,0 +1,111 @@
+{
+  "name": "Stage 23 - The Siren's Switch Room",
+  "grid": [
+    "00000000000000",
+    "00100000000000",
+    "00100000000000",
+    "00100000000000",
+    "00100000000000",
+    "00100000000000",
+    "00100000000000",
+    "00100000000000",
+    "00100111100000",
+    "00100111100000",
+    "00111111144200",
+    "00000111100000",
+    "00000111100000",
+    "44444400000000"
+  ],
+  "start": [
+    10,
+    2
+  ],
+  "goal": [
+    10,
+    11
+  ],
+  "bridges": [
+    {
+      "id": "B_GOAL",
+      "cells": [
+        [10, 9],
+        [10, 10]
+      ],
+      "initially_open": false
+    },
+    {
+      "id": "B1",
+      "cells": [[13, 0]],
+      "initially_open": false
+    },
+    {
+      "id": "B2",
+      "cells": [[13, 1]],
+      "initially_open": false
+    },
+    {
+      "id": "B3",
+      "cells": [[13, 2]],
+      "initially_open": false
+    },
+    {
+      "id": "B4",
+      "cells": [[13, 3]],
+      "initially_open": false
+    },
+    {
+      "id": "B5",
+      "cells": [[13, 4]],
+      "initially_open": false
+    },
+    {
+      "id": "B6",
+      "cells": [[13, 5]],
+      "initially_open": false
+    }
+  ],
+  "switches": [
+    {
+      "pos": [1, 2],
+      "type": "heavy",
+      "operation": "permanent",
+      "linked_bridges": ["B_GOAL"]
+    },
+    {
+      "pos": [8, 6],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["B1"]
+    },
+    {
+      "pos": [8, 8],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["B2"]
+    },
+    {
+      "pos": [9, 7],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["B3"]
+    },
+    {
+      "pos": [11, 7],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["B4"]
+    },
+    {
+      "pos": [12, 6],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["B5"]
+    },
+    {
+      "pos": [12, 8],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["B6"]
+    }
+  ]
+}

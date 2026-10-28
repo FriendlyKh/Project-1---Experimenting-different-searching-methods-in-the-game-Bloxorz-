@@ -1,0 +1,134 @@
+{
+  "name": "Stage 20 - U-Turn Switch Chain",
+  "grid": [
+    "0000000000000000",
+    "0000000033333300",
+    "0000000023333300",
+    "0000000043333300",
+    "0000000043333300",
+    "0011111113333300",
+    "0000000033333300",
+    "0000000033333300",
+    "4444444400000000"
+  ],
+  "start": [
+    5,
+    8
+  ],
+  "goal": [
+    2,
+    8
+  ],
+  "bridges": [
+    {
+      "id": "B_FINAL",
+      "cells": [
+        [3, 8],
+        [4, 8]
+      ],
+      "initially_open": false
+    },
+    {
+      "id": "D1",
+      "cells": [[8, 0]],
+      "initially_open": false
+    },
+    {
+      "id": "D2",
+      "cells": [[8, 1]],
+      "initially_open": false
+    },
+    {
+      "id": "D3",
+      "cells": [[8, 2]],
+      "initially_open": false
+    },
+    {
+      "id": "D4",
+      "cells": [[8, 3]],
+      "initially_open": false
+    },
+    {
+      "id": "D5",
+      "cells": [[8, 4]],
+      "initially_open": false
+    },
+    {
+      "id": "D6",
+      "cells": [[8, 5]],
+      "initially_open": false
+    },
+    {
+      "id": "H1",
+      "cells": [[8, 6]],
+      "initially_open": false
+    },
+    {
+      "id": "H2",
+      "cells": [[8, 7]],
+      "initially_open": false
+    }
+  ],
+  "switches": [
+    {
+      "pos": [5, 2],
+      "type": "heavy",
+      "operation": "permanent",
+      "linked_bridges": ["B_FINAL"]
+    },
+    {
+      "pos": [5, 7],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["H1"]
+    },
+    {
+      "pos": [5, 5],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["H2"]
+    },
+    {
+      "pos": [5, 4],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["H1"]
+    },
+    {
+      "pos": [2, 10],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["D1"]
+    },
+    {
+      "pos": [2, 12],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["D2"]
+    },
+    {
+      "pos": [4, 10],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["D3"]
+    },
+    {
+      "pos": [4, 12],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["D4"]
+    },
+    {
+      "pos": [6, 10],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["D5"]
+    },
+    {
+      "pos": [6, 12],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["D6"]
+    }
+  ]
+}

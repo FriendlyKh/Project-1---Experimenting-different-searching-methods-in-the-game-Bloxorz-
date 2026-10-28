@@ -1,0 +1,86 @@
+{
+  "name": "Stage 24 - The Parity Mirage with Switch Bait",
+  "grid": [
+    "0000000000000",
+    "0111000000000",
+    "0111000000000",
+    "0111000000000",
+    "0010000000000",
+    "0010000000000",
+    "0010000000000",
+    "0010000000000",
+    "0010003333300",
+    "0010003333300",
+    "0011111112300",
+    "0000003333300",
+    "0000003333300",
+    "4444400000000"
+  ],
+  "start": [
+    10,
+    8
+  ],
+  "goal": [
+    10,
+    9
+  ],
+  "bridges": [
+    {
+      "id": "B1",
+      "cells": [[13, 0]],
+      "initially_open": false
+    },
+    {
+      "id": "B2",
+      "cells": [[13, 1]],
+      "initially_open": false
+    },
+    {
+      "id": "B3",
+      "cells": [[13, 2]],
+      "initially_open": false
+    },
+    {
+      "id": "B4",
+      "cells": [[13, 3]],
+      "initially_open": false
+    },
+    {
+      "id": "B5",
+      "cells": [[13, 4]],
+      "initially_open": false
+    }
+  ],
+  "switches": [
+    {
+      "pos": [8, 7],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["B1"]
+    },
+    {
+      "pos": [8, 9],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["B2"]
+    },
+    {
+      "pos": [9, 8],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["B3"]
+    },
+    {
+      "pos": [11, 8],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["B4"]
+    },
+    {
+      "pos": [12, 7],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["B5"]
+    }
+  ]
+}

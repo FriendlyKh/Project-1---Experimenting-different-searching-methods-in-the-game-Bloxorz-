@@ -1,0 +1,97 @@
+{
+  "name": "Stage 21 - Swiss Cheese Plaza",
+  "grid": [
+    "000011111100000000",
+    "000011111100000000",
+    "000011111100000000",
+    "000011111100000000",
+    "111111111111011110",
+    "110111311111110110",
+    "111111111011111110",
+    "111011111113110110",
+    "111113110111111110",
+    "110111111110111310",
+    "111110113111111110",
+    "111311111101131110",
+    "111111111111111210",
+    "444444011111111110"
+  ],
+  "start": [
+    6,
+    6
+  ],
+  "goal": [
+    12,
+    15
+  ],
+  "bridges": [
+    {
+      "id": "B1",
+      "cells": [[13, 0]],
+      "initially_open": false
+    },
+    {
+      "id": "B2",
+      "cells": [[13, 1]],
+      "initially_open": false
+    },
+    {
+      "id": "B3",
+      "cells": [[13, 2]],
+      "initially_open": false
+    },
+    {
+      "id": "B4",
+      "cells": [[13, 3]],
+      "initially_open": false
+    },
+    {
+      "id": "B5",
+      "cells": [[13, 4]],
+      "initially_open": false
+    },
+    {
+      "id": "B6",
+      "cells": [[13, 5]],
+      "initially_open": false
+    }
+  ],
+  "switches": [
+    {
+      "pos": [3, 6],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["B1"]
+    },
+    {
+      "pos": [2, 5],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["B2"]
+    },
+    {
+      "pos": [2, 7],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["B3"]
+    },
+    {
+      "pos": [1, 5],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["B4"]
+    },
+    {
+      "pos": [1, 7],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["B5"]
+    },
+    {
+      "pos": [0, 6],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["B6"]
+    }
+  ]
+}
