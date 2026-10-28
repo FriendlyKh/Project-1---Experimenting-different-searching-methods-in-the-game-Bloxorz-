@@ -364,6 +364,15 @@ class BloxorzApp:
             self.btn_cam_reset,
         ]
 
+        self.cam_buttons = [
+            self.btn_cam_zoom_in,
+            self.btn_cam_zoom_out,
+            self.btn_cam_orbit_l,
+            self.btn_cam_orbit_r,
+            self.btn_cam_tilt,
+            self.btn_cam_reset,
+        ]
+
         self.buttons = [
             self.btn_prev_stage,
             self.btn_restart,
