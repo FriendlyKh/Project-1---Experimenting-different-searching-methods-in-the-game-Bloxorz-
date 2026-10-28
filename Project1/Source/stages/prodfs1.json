@@ -1,149 +1,110 @@
 {
-  "name": "Pro-DFS 01 - Hall of Decoy Switches",
+  "name": "Stage 15 - Switch Swamp",
   "grid": [
-    "11111000000000000000",
-    "11111000000000000000",
-    "11111111111111111200",
-    "11111000000000000000",
-    "11111000000000000000",
-    "44444400000000000000"
+    "00000000000000",
+    "00000000000000",
+    "01111111111000",
+    "01000000001000",
+    "01000000001000",
+    "01000000002000",
+    "01000000000000",
+    "01000000000000",
+    "01000000000000",
+    "01000000000000",
+    "01000000000000",
+    "01000000000000",
+    "01001111111100",
+    "01001111111100",
+    "01111111111100",
+    "44444440000000"
   ],
   "start": [
-    2,
-    2
+    14,
+    1
   ],
   "goal": [
-    2,
-    17
+    5,
+    10
   ],
   "bridges": [
     {
       "id": "B1",
-      "cells": [
-        [
-          5,
-          0
-        ]
-      ],
+      "cells": [[15, 0]],
       "initially_open": false
     },
     {
       "id": "B2",
-      "cells": [
-        [
-          5,
-          1
-        ]
-      ],
+      "cells": [[15, 1]],
       "initially_open": false
     },
     {
       "id": "B3",
-      "cells": [
-        [
-          5,
-          2
-        ]
-      ],
+      "cells": [[15, 2]],
       "initially_open": false
     },
     {
       "id": "B4",
-      "cells": [
-        [
-          5,
-          3
-        ]
-      ],
+      "cells": [[15, 3]],
       "initially_open": false
     },
     {
       "id": "B5",
-      "cells": [
-        [
-          5,
-          4
-        ]
-      ],
+      "cells": [[15, 4]],
       "initially_open": false
     },
     {
       "id": "B6",
-      "cells": [
-        [
-          5,
-          5
-        ]
-      ],
+      "cells": [[15, 5]],
+      "initially_open": false
+    },
+    {
+      "id": "B7",
+      "cells": [[15, 6]],
       "initially_open": false
     }
   ],
   "switches": [
     {
-      "pos": [
-        0,
-        0
-      ],
+      "pos": [14, 4],
       "type": "soft",
       "operation": "toggle",
-      "linked_bridges": [
-        "B1"
-      ]
+      "linked_bridges": ["B1"]
     },
     {
-      "pos": [
-        0,
-        2
-      ],
+      "pos": [14, 6],
       "type": "soft",
       "operation": "toggle",
-      "linked_bridges": [
-        "B2"
-      ]
+      "linked_bridges": ["B2"]
     },
     {
-      "pos": [
-        0,
-        4
-      ],
+      "pos": [14, 8],
       "type": "soft",
       "operation": "toggle",
-      "linked_bridges": [
-        "B3"
-      ]
+      "linked_bridges": ["B3"]
     },
     {
-      "pos": [
-        4,
-        0
-      ],
+      "pos": [14, 10],
       "type": "soft",
       "operation": "toggle",
-      "linked_bridges": [
-        "B4"
-      ]
+      "linked_bridges": ["B4"]
     },
     {
-      "pos": [
-        4,
-        2
-      ],
+      "pos": [12, 5],
       "type": "soft",
       "operation": "toggle",
-      "linked_bridges": [
-        "B5"
-      ]
+      "linked_bridges": ["B5"]
     },
     {
-      "pos": [
-        4,
-        4
-      ],
+      "pos": [12, 7],
       "type": "soft",
       "operation": "toggle",
-      "linked_bridges": [
-        "B6"
-      ]
+      "linked_bridges": ["B6"]
+    },
+    {
+      "pos": [12, 9],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["B7"]
     }
   ]
 }

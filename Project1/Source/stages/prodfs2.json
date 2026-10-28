@@ -1,109 +1,97 @@
 {
-  "name": "Pro-DFS 02 - The Deep Braid",
+  "name": "Stage 16 - The Up-First Labyrinth",
   "grid": [
-    "01111111111111111110",
-    "01001001001001001010",
-    "01001001001001001010",
-    "01111111111111111112",
-    "01001001001001001010",
-    "01001001001001001010",
-    "01111111111111111110",
-    "44440000000000000000"
+    "011111111110",
+    "010000000010",
+    "010000000010",
+    "011111110010",
+    "010011110010",
+    "010000000010",
+    "011111110020",
+    "010011110000",
+    "010000000000",
+    "011111110000",
+    "010011110000",
+    "010000000000",
+    "010000000000",
+    "444444000000"
   ],
   "start": [
-    3,
+    12,
     1
   ],
   "goal": [
-    3,
-    19
+    6,
+    10
   ],
   "bridges": [
     {
       "id": "B1",
-      "cells": [
-        [
-          7,
-          0
-        ]
-      ],
+      "cells": [[13, 0]],
       "initially_open": false
     },
     {
       "id": "B2",
-      "cells": [
-        [
-          7,
-          1
-        ]
-      ],
+      "cells": [[13, 1]],
       "initially_open": false
     },
     {
       "id": "B3",
-      "cells": [
-        [
-          7,
-          2
-        ]
-      ],
+      "cells": [[13, 2]],
       "initially_open": false
     },
     {
       "id": "B4",
-      "cells": [
-        [
-          7,
-          3
-        ]
-      ],
+      "cells": [[13, 3]],
+      "initially_open": false
+    },
+    {
+      "id": "B5",
+      "cells": [[13, 4]],
+      "initially_open": false
+    },
+    {
+      "id": "B6",
+      "cells": [[13, 5]],
       "initially_open": false
     }
   ],
   "switches": [
     {
-      "pos": [
-        0,
-        4
-      ],
+      "pos": [9, 4],
       "type": "soft",
       "operation": "toggle",
-      "linked_bridges": [
-        "B1"
-      ]
+      "linked_bridges": ["B1"]
     },
     {
-      "pos": [
-        6,
-        4
-      ],
+      "pos": [9, 6],
       "type": "soft",
       "operation": "toggle",
-      "linked_bridges": [
-        "B2"
-      ]
+      "linked_bridges": ["B2"]
     },
     {
-      "pos": [
-        0,
-        10
-      ],
+      "pos": [6, 4],
       "type": "soft",
       "operation": "toggle",
-      "linked_bridges": [
-        "B3"
-      ]
+      "linked_bridges": ["B3"]
     },
     {
-      "pos": [
-        6,
-        10
-      ],
+      "pos": [6, 6],
       "type": "soft",
       "operation": "toggle",
-      "linked_bridges": [
-        "B4"
-      ]
+      "linked_bridges": ["B4"]
+    },
+    {
+      "pos": [3, 4],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["B5"]
+    },
+    {
+      "pos": [3, 6],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["B6"]
     }
   ]
 }
