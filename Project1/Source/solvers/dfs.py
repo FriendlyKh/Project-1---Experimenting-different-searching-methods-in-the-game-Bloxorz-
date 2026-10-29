@@ -88,7 +88,7 @@ class DFSSolver(BaseSolver):
 
             # Reversed so the first legal action is popped first from the LIFO stack
             for child in reversed(children):
-                if child.state not in visited:
+                if child.state not in visited  or child.depth < visited[child.state]:
                     visited[child.state] = child.depth
                     stack.append(child)
                     generated_count += 1
