@@ -64,7 +64,7 @@ from ..solvers.bfs import BFSSolver
 from ..solvers.dfs import DFSSolver
 from ..solvers.ucs import UCSSolver, custom_cost_function
 from ..solvers.astar import AStarSolver
-from ..solvers.heuristics import orientation_aware_heuristic
+from ..solvers.heuristics import manhattan_heuristic
 from ..solvers.base import SearchResult
 from .renderer import GameRenderer
 from .widgets import Button, ModeToggleSwitch, draw_pastel_card, Dropdown, BenchmarkModal
@@ -204,12 +204,41 @@ class BloxorzApp:
                 cache[path] = path.stem.replace("_", " ").title()
         return cache[path]
 
+    def _compute_sidebar_y_layout(self):
+        """Computes adaptive vertical layout metrics so cards never clip even on compact displays."""
+        H = self.screen_height
+        if H >= 750:
+            return {
+                "stage_h": 92,
+                "y_mode": 112, "mode_h": 66,
+                "y_solv": 186, "solv_h": 154,
+                "y_rep": 348,  "rep_h": 110,
+                "y_met": 466,  "met_h": 172,
+                "y_hk": 646,   "hk_h": 92,
+                "solv_btn_h": 32, "solv_row2": 64, "solv_row3": 104,
+                "rep_btn_h": 32, "rep_prog_y": 66, "rep_seq_y": 82,
+                "met_row_step": 22,
+            }
+        else:
+            return {
+                "stage_h": 86,
+                "y_mode": 104, "mode_h": 58,
+                "y_solv": 168, "solv_h": 142,
+                "y_rep": 316,  "rep_h": 98,
+                "y_met": 420,  "met_h": 150,
+                "y_hk": 576,   "hk_h": 88,
+                "solv_btn_h": 28, "solv_row2": 58, "solv_row3": 96,
+                "rep_btn_h": 28, "rep_prog_y": 58, "rep_seq_y": 74,
+                "met_row_step": 19,
+            }
+
     def _init_widgets(self):
         """Constructs all cute pastel sidebar controls, dropdown, benchmark button, and camera HUD."""
         sb_x = self.sidebar_area.left + 14
         card_w = self.sidebar_area.width - 28
         inner_x = self.sidebar_area.left + 22
         w = card_w - 16
+        lay = self._compute_sidebar_y_layout()
 
         # 1. Header & Stage Selector Card (Title, Reset on top right; Prev, Dropdown, Next below)
         stage_items = [f"{i+1}. {self._get_stage_display_name(i)}" for i in range(len(self.stage_files))]
@@ -263,17 +292,17 @@ class BloxorzApp:
         )
 
         # 2. View Mode Segmented Switch (3D/2.5D vs 2D Algo Vis)
-        y_mode = 112
+        y_mode = lay["y_mode"]
         self.mode_switch = ModeToggleSwitch(
-            rect=(inner_x, y_mode + 24, w, 34),
+            rect=(inner_x, y_mode + (24 if lay["mode_h"] > 60 else 20), w, 34 if lay["mode_h"] > 60 else 30),
             mode=self.view_mode,
             on_change=self.set_view_mode,
         )
 
         # 3. AI Search Solvers & Benchmark Card
-        y_solv = 186
+        y_solv = lay["y_solv"]
         half_w = (w - 8) // 2
-        solv_h = 32
+        solv_h = lay["solv_btn_h"]
 
         self.btn_bfs = Button(
             rect=(inner_x, y_solv + 26, half_w, solv_h),
@@ -298,7 +327,7 @@ class BloxorzApp:
             border_radius=8,
         )
         self.btn_ucs = Button(
-            rect=(inner_x, y_solv + 64, half_w, solv_h),
+            rect=(inner_x, y_solv + lay["solv_row2"], half_w, solv_h),
             text="Solve UCS",
             on_click=lambda: self.start_solver_async(UCSSolver(cost_fn=custom_cost_function)),
             bg_color=BTN_SUNNY[0],
@@ -309,9 +338,9 @@ class BloxorzApp:
             border_radius=8,
         )
         self.btn_astar = Button(
-            rect=(inner_x + half_w + 8, y_solv + 64, half_w, solv_h),
+            rect=(inner_x + half_w + 8, y_solv + lay["solv_row2"], half_w, solv_h),
             text="Solve A*",
-            on_click=lambda: self.start_solver_async(AStarSolver(heuristic_fn=orientation_aware_heuristic)),
+            on_click=lambda: self.start_solver_async(AStarSolver(heuristic_fn=manhattan_heuristic)),
             bg_color=BTN_MINT[0],
             hover_color=BTN_MINT[1],
             shadow_color=BTN_MINT[2],
@@ -322,7 +351,7 @@ class BloxorzApp:
 
         # 4. Benchmark Stage Button (runs BFS, DFS, UCS, A* & displays comparison modal)
         self.btn_benchmark = Button(
-            rect=(inner_x, y_solv + 104, w, 32),
+            rect=(inner_x, y_solv + lay["solv_row3"], w, solv_h),
             text="⚡ Benchmark All 4 Algorithms",
             on_click=self.start_benchmark_async,
             bg_color=(255, 128, 148),
@@ -334,10 +363,11 @@ class BloxorzApp:
         )
 
         # 5. Replay Controller Buttons (Play/Pause, < Step, Step >, Start)
-        y_rep = 348
+        y_rep = lay["y_rep"]
         btn_w4 = (w - 18) // 4
+        rep_btn_h = lay["rep_btn_h"]
         self.btn_replay_toggle = Button(
-            rect=(inner_x, y_rep + 26, btn_w4, 32),
+            rect=(inner_x, y_rep + 24, btn_w4, rep_btn_h),
             text="Play",
             on_click=self.toggle_replay,
             bg_color=BTN_MINT[0],
@@ -348,7 +378,7 @@ class BloxorzApp:
             border_radius=8,
         )
         self.btn_replay_prev = Button(
-            rect=(inner_x + (btn_w4 + 6), y_rep + 26, btn_w4, 32),
+            rect=(inner_x + (btn_w4 + 6), y_rep + 24, btn_w4, rep_btn_h),
             text="< Step",
             on_click=self.step_backward_replay,
             bg_color=BTN_NEUTRAL[0],
@@ -359,7 +389,7 @@ class BloxorzApp:
             border_radius=8,
         )
         self.btn_replay_step = Button(
-            rect=(inner_x + 2 * (btn_w4 + 6), y_rep + 26, btn_w4, 32),
+            rect=(inner_x + 2 * (btn_w4 + 6), y_rep + 24, btn_w4, rep_btn_h),
             text="Step >",
             on_click=self.step_forward_replay,
             bg_color=BTN_NEUTRAL[0],
@@ -370,7 +400,7 @@ class BloxorzApp:
             border_radius=8,
         )
         self.btn_replay_reset = Button(
-            rect=(inner_x + 3 * (btn_w4 + 6), y_rep + 26, btn_w4, 32),
+            rect=(inner_x + 3 * (btn_w4 + 6), y_rep + 24, btn_w4, rep_btn_h),
             text="Start",
             on_click=self.reset_replay,
             bg_color=BTN_NEUTRAL[0],
@@ -527,25 +557,27 @@ class BloxorzApp:
             self.stage_dropdown.set_rect((inner_x + btn_nav_w + 6, 56, dd_w, 32))
         self.btn_next_stage.rect = pygame.Rect(inner_x + btn_nav_w + 6 + dd_w + 6, 56, btn_nav_w, 32)
 
-        y_mode = 112
+        lay = self._compute_sidebar_y_layout()
+        y_mode = lay["y_mode"]
         if self.mode_switch:
-            self.mode_switch.rect = pygame.Rect(inner_x, y_mode + 24, w, 34)
+            self.mode_switch.rect = pygame.Rect(inner_x, y_mode + (24 if lay["mode_h"] > 60 else 20), w, 34 if lay["mode_h"] > 60 else 30)
 
-        y_solv = 186
+        y_solv = lay["y_solv"]
         half_w = (w - 8) // 2
-        solv_h = 32
+        solv_h = lay["solv_btn_h"]
         self.btn_bfs.rect = pygame.Rect(inner_x, y_solv + 26, half_w, solv_h)
         self.btn_dfs.rect = pygame.Rect(inner_x + half_w + 8, y_solv + 26, half_w, solv_h)
-        self.btn_ucs.rect = pygame.Rect(inner_x, y_solv + 64, half_w, solv_h)
-        self.btn_astar.rect = pygame.Rect(inner_x + half_w + 8, y_solv + 64, half_w, solv_h)
-        self.btn_benchmark.rect = pygame.Rect(inner_x, y_solv + 104, w, 32)
+        self.btn_ucs.rect = pygame.Rect(inner_x, y_solv + lay["solv_row2"], half_w, solv_h)
+        self.btn_astar.rect = pygame.Rect(inner_x + half_w + 8, y_solv + lay["solv_row2"], half_w, solv_h)
+        self.btn_benchmark.rect = pygame.Rect(inner_x, y_solv + lay["solv_row3"], w, solv_h)
 
-        y_rep = 348
+        y_rep = lay["y_rep"]
         btn_w4 = (w - 18) // 4
-        self.btn_replay_toggle.rect = pygame.Rect(inner_x, y_rep + 26, btn_w4, 32)
-        self.btn_replay_prev.rect = pygame.Rect(inner_x + (btn_w4 + 6), y_rep + 26, btn_w4, 32)
-        self.btn_replay_step.rect = pygame.Rect(inner_x + 2 * (btn_w4 + 6), y_rep + 26, btn_w4, 32)
-        self.btn_replay_reset.rect = pygame.Rect(inner_x + 3 * (btn_w4 + 6), y_rep + 26, btn_w4, 32)
+        rep_btn_h = lay["rep_btn_h"]
+        self.btn_replay_toggle.rect = pygame.Rect(inner_x, y_rep + 24, btn_w4, rep_btn_h)
+        self.btn_replay_prev.rect = pygame.Rect(inner_x + (btn_w4 + 6), y_rep + 24, btn_w4, rep_btn_h)
+        self.btn_replay_step.rect = pygame.Rect(inner_x + 2 * (btn_w4 + 6), y_rep + 24, btn_w4, rep_btn_h)
+        self.btn_replay_reset.rect = pygame.Rect(inner_x + 3 * (btn_w4 + 6), y_rep + 24, btn_w4, rep_btn_h)
 
         self._layout_cam_buttons()
 
@@ -592,6 +624,7 @@ class BloxorzApp:
 
     def restart_stage(self):
         """Resets the current stage to start state."""
+        self.cancel_waiting()
         self.state = self.env.get_initial_state()
         self.prev_state = self.state
         self.anim_progress = 1.0
@@ -612,6 +645,7 @@ class BloxorzApp:
         """Begins the swipe-out phase of the level transition animation."""
         if self.level_transition_t >= 0:
             return
+        self.cancel_waiting()
         self._pending_stage_idx = target_idx % len(self.stage_files)
         self.level_transition_dir = direction
         self.level_transition_t = 0.0
@@ -635,6 +669,8 @@ class BloxorzApp:
         if target_idx != self.current_stage_idx:
             dir = +1 if target_idx > self.current_stage_idx else -1
             self._start_level_transition(target_idx, direction=dir)
+        else:
+            self.restart_stage()
 
     def _compute_explored_cells(self, max_states: int, path_states: List[GameState]) -> Dict[Tuple[int, int], int]:
         """Builds a cell visitation map `(r, c) -> order` for the search space heatmap."""
@@ -644,14 +680,20 @@ class BloxorzApp:
         visited = {init_state}
         step_counter = 0
 
-        while queue_st and len(visited) <= max(12, max_states):
+        # Cap max_states to avoid freezing the UI thread on large search spaces
+        budget = min(max(12, max_states), 1500)
+        total_board_cells = self.env.board.rows * self.env.board.cols
+
+        while queue_st and len(visited) <= budget:
             curr = queue_st.popleft()
             step_counter += 1
             for cell in curr.block.occupied_cells():
                 if cell not in explored:
                     explored[cell] = step_counter
+            if len(explored) >= total_board_cells:
+                break
             for _, nxt, _ in self.env.get_successors(curr):
-                if nxt not in visited:
+                if nxt is not None and nxt not in visited:
                     visited.add(nxt)
                     queue_st.append(nxt)
 
@@ -690,10 +732,11 @@ class BloxorzApp:
         for name, btn in solver_btn_map.items():
             btn.is_active = (name == solver.name)
 
+        cur_stage = self.current_stage_idx
         def worker():
             res = solver.solve(self.env)
             if not self.waiting_cancel_event.is_set():
-                self.async_worker_queue.put(("single", solver, res))
+                self.async_worker_queue.put(("single", solver, res, cur_stage))
 
         self.async_thread = threading.Thread(target=worker, daemon=True)
         self.async_thread.start()
@@ -714,12 +757,13 @@ class BloxorzApp:
         for b in (self.btn_bfs, self.btn_dfs, self.btn_ucs, self.btn_astar):
             b.is_active = False
 
+        cur_stage = self.current_stage_idx
         def worker():
             solvers = [
                 BFSSolver(),
                 DFSSolver(max_depth=400),
                 UCSSolver(cost_fn=custom_cost_function),
-                AStarSolver(heuristic_fn=orientation_aware_heuristic),
+                AStarSolver(heuristic_fn=manhattan_heuristic),
             ]
             results = []
             for i, s in enumerate(solvers):
@@ -740,7 +784,7 @@ class BloxorzApp:
                     "result_obj": res,
                 })
             if not self.waiting_cancel_event.is_set():
-                self.async_worker_queue.put(("benchmark", results))
+                self.async_worker_queue.put(("benchmark", results, cur_stage))
 
         self.async_thread = threading.Thread(target=worker, daemon=True)
         self.async_thread.start()
@@ -762,6 +806,7 @@ class BloxorzApp:
             )
             self.replay_timer = 0
             self.is_lost = False
+            self.death_anim_t = -1.0
             self.reset_replay()
             self.toggle_replay()
         else:
@@ -795,6 +840,8 @@ class BloxorzApp:
             }
             for name, btn in solver_btn_map.items():
                 btn.is_active = (name == algo_name)
+            self.death_anim_t = -1.0
+            self.is_lost = False
             self._on_single_solver_completed(None, res)
         self.close_benchmark_modal()
 
@@ -864,6 +911,10 @@ class BloxorzApp:
     def handle_manual_move(self, direction: Direction):
         """Processes keyboard move from human player with smooth block roll animation."""
         if self.is_replaying or self.is_won or self.is_lost:
+            return
+        if direction == Direction.SWITCH_CUBE and not self.state.block.is_split:
+            return
+        if self.anim_progress < 0.35:
             return
         next_state = self.env.step(self.state, direction)
         if next_state is None:
@@ -1052,8 +1103,10 @@ class BloxorzApp:
         inner_x = self.sidebar_area.left + 22
         w = card_w - 16
 
+        lay = self._compute_sidebar_y_layout()
+
         # 1. Header & Stage Selector Card (Title, Reset on top right; Prev, Dropdown, Next below)
-        stage_card = pygame.Rect(sb_x, 12, card_w, 92)
+        stage_card = pygame.Rect(sb_x, 12, card_w, lay["stage_h"])
         draw_pastel_card(self.screen, stage_card, bg_color=COLOR_CARD_ALT_BG, border_color=(244, 214, 206), radius=16)
 
         title_surf = self.font_title.render("Bloxorz AI Studio", True, COLOR_TEXT_ACCENT)
@@ -1066,20 +1119,20 @@ class BloxorzApp:
         self.btn_next_stage.draw(self.screen)
 
         # 2. View Mode Switcher Card (3D/2.5D vs 2D Algo Vis)
-        y_mode = 112
-        mode_card = pygame.Rect(sb_x, y_mode, card_w, 66)
+        y_mode = lay["y_mode"]
+        mode_card = pygame.Rect(sb_x, y_mode, card_w, lay["mode_h"])
         draw_pastel_card(self.screen, mode_card, bg_color=COLOR_CARD_BG, border_color=COLOR_CARD_BORDER, radius=16)
         mode_hdr = self.font_tiny.render("VIEWPOINT & VISUALIZATION MODE (KEY: M)", True, COLOR_TEXT_MUTED)
-        self.screen.blit(mode_hdr, (inner_x, y_mode + 8))
+        self.screen.blit(mode_hdr, (inner_x, y_mode + (8 if lay["mode_h"] > 60 else 5)))
         if self.mode_switch:
             self.mode_switch.draw(self.screen)
 
         # 3. AI Search Solvers & Benchmark Card
-        y_solv = 186
-        solv_card = pygame.Rect(sb_x, y_solv, card_w, 154)
+        y_solv = lay["y_solv"]
+        solv_card = pygame.Rect(sb_x, y_solv, card_w, lay["solv_h"])
         draw_pastel_card(self.screen, solv_card, bg_color=COLOR_CARD_BG, border_color=COLOR_CARD_BORDER, radius=16)
         solv_hdr = self.font_section.render("Search Algorithms & Benchmark", True, COLOR_TEXT)
-        self.screen.blit(solv_hdr, (inner_x, y_solv + 7))
+        self.screen.blit(solv_hdr, (inner_x, y_solv + 6))
 
         self.btn_bfs.draw(self.screen)
         self.btn_dfs.draw(self.screen)
@@ -1088,11 +1141,11 @@ class BloxorzApp:
         self.btn_benchmark.draw(self.screen)
 
         # 4. Replay & Trajectory Controller Card
-        y_rep = 348
-        rep_card = pygame.Rect(sb_x, y_rep, card_w, 110)
+        y_rep = lay["y_rep"]
+        rep_card = pygame.Rect(sb_x, y_rep, card_w, lay["rep_h"])
         draw_pastel_card(self.screen, rep_card, bg_color=COLOR_CARD_MINT_BG, border_color=(196, 234, 220), radius=16)
         rep_hdr = self.font_section.render("Animated Solution Replay", True, COLOR_TEXT)
-        self.screen.blit(rep_hdr, (inner_x, y_rep + 7))
+        self.screen.blit(rep_hdr, (inner_x, y_rep + 5))
 
         self.btn_replay_toggle.draw(self.screen)
         self.btn_replay_prev.draw(self.screen)
@@ -1100,7 +1153,7 @@ class BloxorzApp:
         self.btn_replay_reset.draw(self.screen)
 
         # Replay Progress Bar
-        prog_bg = pygame.Rect(inner_x, y_rep + 66, w, 10)
+        prog_bg = pygame.Rect(inner_x, y_rep + lay["rep_prog_y"], w, 8 if lay["rep_h"] < 105 else 10)
         pygame.draw.rect(self.screen, (214, 238, 228), prog_bg, border_radius=5)
         if self.replay_states and len(self.replay_states) > 1:
             ratio = self.replay_idx / float(len(self.replay_states) - 1)
@@ -1121,17 +1174,16 @@ class BloxorzApp:
             seq_str = "Run a solver or benchmark to animate path"
 
         seq_surf = self.font_tiny.render(seq_str, True, COLOR_TEXT_MUTED)
-        self.screen.blit(seq_surf, (inner_x, y_rep + 82))
+        self.screen.blit(seq_surf, (inner_x, y_rep + lay["rep_seq_y"]))
 
         # 5. Performance Metrics Card
-        y_met = 466
-        avail_h_met = max(160, self.screen_height - y_met - 104)
-        met_card = pygame.Rect(sb_x, y_met, card_w, 172)
+        y_met = lay["y_met"]
+        met_card = pygame.Rect(sb_x, y_met, card_w, lay["met_h"])
         draw_pastel_card(self.screen, met_card, bg_color=(255, 255, 255), border_color=COLOR_CARD_BORDER, radius=16)
         met_hdr = self.font_section.render("Algorithm Telemetry", True, COLOR_TEXT)
-        self.screen.blit(met_hdr, (inner_x, y_met + 8))
+        self.screen.blit(met_hdr, (inner_x, y_met + 6))
 
-        status_pill = pygame.Rect(met_card.right - 98, y_met + 7, 84, 22)
+        status_pill = pygame.Rect(met_card.right - 98, y_met + 6, 84, 20)
         if self.last_result:
             ok = self.last_result.success
             st_bg = (214, 248, 230) if ok else (255, 220, 226)
@@ -1154,19 +1206,20 @@ class BloxorzApp:
             ("Nodes Exp / Gen", f"{r.expanded_nodes} / {r.generated_nodes}" if r else "-"),
             ("Block State", "SPLIT (2 Cubes)" if (self.state and self.state.block.is_split) else (self.state.block.orientation.value.upper() if self.state else "-")),
         ]
+        step = lay["met_row_step"]
         for i, (k_label, v_val) in enumerate(metrics_rows):
-            ry = y_met + 34 + i * 22
+            ry = y_met + 30 + i * step
             if i % 2 == 0:
-                row_bg = pygame.Rect(inner_x - 2, ry - 1, card_w - 12, 20)
+                row_bg = pygame.Rect(inner_x - 2, ry - 1, card_w - 12, step - 2)
                 pygame.draw.rect(self.screen, (248, 245, 255), row_bg, border_radius=5)
             k_surf = self.font_tiny.render(k_label, True, COLOR_TEXT_MUTED)
             v_surf = self.font_metric.render(v_val, True, COLOR_TEXT)
-            self.screen.blit(k_surf, (inner_x + 4, ry + 1))
-            self.screen.blit(v_surf, (met_card.right - v_surf.get_width() - 14, ry + 1))
+            self.screen.blit(k_surf, (inner_x + 4, ry))
+            self.screen.blit(v_surf, (met_card.right - v_surf.get_width() - 14, ry))
 
         # 6. Cute Controls & Camera Shortcuts Card
-        y_hk = y_met + 180
-        hk_card = pygame.Rect(sb_x, y_hk, card_w, 92)
+        y_hk = lay["y_hk"]
+        hk_card = pygame.Rect(sb_x, y_hk, card_w, lay["hk_h"])
         draw_pastel_card(self.screen, hk_card, bg_color=COLOR_CARD_ALT_BG, border_color=(244, 214, 206), radius=14)
         hk_lines = [
             "Controls & 3D Camera Shortcuts:",
@@ -1216,12 +1269,15 @@ class BloxorzApp:
                 payload = self.async_worker_queue.get_nowait()
                 task_kind = payload[0]
                 self.is_waiting = False
-                if task_kind == "single":
-                    _, solver, result = payload
-                    self._on_single_solver_completed(solver, result)
-                elif task_kind == "benchmark":
-                    _, results = payload
-                    self._on_benchmark_completed(results)
+                task_stage = payload[-1]
+                # Only apply result if player has not navigated away to another stage
+                if task_stage == self.current_stage_idx:
+                    if task_kind == "single":
+                        _, solver, result, _ = payload
+                        self._on_single_solver_completed(solver, result)
+                    elif task_kind == "benchmark":
+                        _, results, _ = payload
+                        self._on_benchmark_completed(results)
 
             mouse_pos = pygame.mouse.get_pos()
 
@@ -1266,7 +1322,27 @@ class BloxorzApp:
                     if self.benchmark_modal.handle_event(event):
                         continue
 
-                # 3. Stage dropdown event interception
+                # 3. Stage dropdown event interception (swallows arrow keys and ESC when open)
+                if self.stage_dropdown and self.stage_dropdown.is_open:
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE:
+                            self.stage_dropdown.is_open = False
+                            continue
+                        elif event.key == pygame.K_UP:
+                            self.stage_dropdown.scroll_offset = max(0, self.stage_dropdown.scroll_offset - 1)
+                            continue
+                        elif event.key == pygame.K_DOWN:
+                            max_scroll = max(0, len(self.stage_dropdown.items) - self.stage_dropdown.max_visible_items)
+                            self.stage_dropdown.scroll_offset = min(max_scroll, self.stage_dropdown.scroll_offset + 1)
+                            continue
+                        elif event.key in (pygame.K_RETURN, pygame.K_KP_ENTER, pygame.K_SPACE):
+                            if self.stage_dropdown.hovered_item_idx is not None:
+                                self.stage_dropdown.selected_idx = self.stage_dropdown.hovered_item_idx
+                                self.stage_dropdown.is_open = False
+                                if self.stage_dropdown.on_select:
+                                    self.stage_dropdown.on_select(self.stage_dropdown.selected_idx)
+                                continue
+
                 if self.stage_dropdown and self.stage_dropdown.handle_event(event, self.screen.get_rect()):
                     continue
 

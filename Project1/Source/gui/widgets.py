@@ -345,6 +345,7 @@ class Dropdown:
         self.is_dragging_scrollbar = False
         self.scrollbar_drag_start_y = 0
         self.scrollbar_drag_start_offset = 0
+        self._last_surface_rect: Optional[pygame.Rect] = None
 
     def set_rect(self, rect: Tuple[int, int, int, int]):
         self.rect = pygame.Rect(rect)
@@ -364,6 +365,11 @@ class Dropdown:
         return "Select Stage"
 
     def get_popup_rect(self, surface_rect: Optional[pygame.Rect] = None) -> pygame.Rect:
+        if surface_rect is not None:
+            self._last_surface_rect = surface_rect
+        elif self._last_surface_rect is not None:
+            surface_rect = self._last_surface_rect
+
         vis = min(len(self.items), self.max_visible_items)
         h = vis * self.item_height + 8
         w = max(self.rect.width, 220)
@@ -376,15 +382,20 @@ class Dropdown:
                 y = self.rect.top - h - 4
         return pygame.Rect(x, y, w, h)
 
-    def update(self, mouse_pos: Tuple[int, int]):
+    def update(self, mouse_pos: Tuple[int, int], surface_rect: Optional[pygame.Rect] = None):
         self.is_hovered = self.rect.collidepoint(mouse_pos)
         if self.is_open:
-            popup_rect = self.get_popup_rect()
+            popup_rect = self.get_popup_rect(surface_rect)
             if popup_rect.collidepoint(mouse_pos):
                 rel_y = mouse_pos[1] - (popup_rect.top + 4)
-                idx = self.scroll_offset + rel_y // self.item_height
-                if 0 <= idx < len(self.items):
-                    self.hovered_item_idx = idx
+                row_i = rel_y // self.item_height
+                vis = min(len(self.items), self.max_visible_items)
+                if 0 <= row_i < vis:
+                    idx = self.scroll_offset + row_i
+                    if 0 <= idx < len(self.items):
+                        self.hovered_item_idx = idx
+                    else:
+                        self.hovered_item_idx = None
                 else:
                     self.hovered_item_idx = None
             else:
@@ -405,15 +416,18 @@ class Dropdown:
                         self.scrollbar_drag_start_offset = self.scroll_offset
                         return True
 
-                    # Click on an item
+                    # Click on an item (with row bounds check)
                     rel_y = event.pos[1] - (popup_rect.top + 4)
-                    clicked_item = self.scroll_offset + rel_y // self.item_height
-                    if 0 <= clicked_item < len(self.items):
-                        self.selected_idx = clicked_item
-                        self.is_open = False
-                        if self.on_select:
-                            self.on_select(self.selected_idx)
-                        return True
+                    row_i = rel_y // self.item_height
+                    vis = min(len(self.items), self.max_visible_items)
+                    if 0 <= row_i < vis:
+                        clicked_item = self.scroll_offset + row_i
+                        if 0 <= clicked_item < len(self.items):
+                            self.selected_idx = clicked_item
+                            self.is_open = False
+                            if self.on_select:
+                                self.on_select(self.selected_idx)
+                            return True
                     return True
 
                 elif self.rect.collidepoint(event.pos):
@@ -596,6 +610,7 @@ class BenchmarkModal:
         self.btn_close: Optional[Button] = None
         self.btn_x: Optional[Button] = None
         self.modal_rect = pygame.Rect(0, 0, 840, 480)
+        self._last_screen_size: Optional[Tuple[int, int]] = None
 
         self._analyze_results()
 
@@ -622,6 +637,11 @@ class BenchmarkModal:
             self.winner_summary = "⚠️ None of the algorithms found a solution within the search limits."
 
     def _layout(self, screen_rect: pygame.Rect):
+        cur_size = (screen_rect.width, screen_rect.height)
+        if self._last_screen_size == cur_size:
+            return
+        self._last_screen_size = cur_size
+
         mw = min(860, screen_rect.width - 40)
         mh = min(490, screen_rect.height - 40)
         self.modal_rect = pygame.Rect(
@@ -713,7 +733,8 @@ class BenchmarkModal:
             if btn.handle_event(event):
                 return True
 
-        if event.type in (pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP):
+        # Absorb all mouse and keyboard events while modal is open to protect background game
+        if event.type in (pygame.KEYDOWN, pygame.KEYUP, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEWHEEL):
             return True
         return False
 

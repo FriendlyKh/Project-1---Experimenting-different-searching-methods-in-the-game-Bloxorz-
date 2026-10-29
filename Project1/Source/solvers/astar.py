@@ -27,7 +27,8 @@ class AStarSolver(BaseSolver):
         name: str = "A*"
     ):
         super().__init__(name = name)
-        self.heuristic_fn = (heuristic_fn if heuristic_fn is not None else manhattan_heuristic)
+        # Strictly configured to use pure Manhattan distance heuristic
+        self.heuristic_fn = manhattan_heuristic
 
     def _search(
             self, 

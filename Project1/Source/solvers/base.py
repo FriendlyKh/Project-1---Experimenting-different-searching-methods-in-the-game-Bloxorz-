@@ -106,12 +106,14 @@ class BaseSolver(ABC):
     def solve(
         self,
         env: BloxorzEnv,
-        timeout: float = 60.0,
+        timeout: float = 120.0,
     ) -> SearchResult:
         """
         Executes search on the given environment, measuring time and memory.
         """
-        tracemalloc.start()
+        was_tracing = tracemalloc.is_tracing()
+        if not was_tracing:
+            tracemalloc.start()
         start_time = time.perf_counter()
 
         goal_node = None
@@ -127,8 +129,12 @@ class BaseSolver(ABC):
             status_msg = f"Error: {str(e)}"
         finally:
             elapsed = time.perf_counter() - start_time
-            current_mem, peak_mem = tracemalloc.get_traced_memory()
-            tracemalloc.stop()
+            if tracemalloc.is_tracing():
+                current_mem, peak_mem = tracemalloc.get_traced_memory()
+                if not was_tracing:
+                    tracemalloc.stop()
+            else:
+                peak_mem = 0
 
         peak_kb = peak_mem / 1024.0
 

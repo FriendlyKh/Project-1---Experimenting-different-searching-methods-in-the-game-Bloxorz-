@@ -39,7 +39,7 @@ def _benchmark_stage_sort_key(path: Path):
 def run_benchmarks(
     stages_dir: Path = STAGES_DIR,
     output_dir: Path = OUTPUT_DIR,
-    timeout: float = 30.0,
+    timeout: float = 120.0,
 ) -> List[Dict[str, Any]]:
     """
     Executes all search algorithms on each stage found in stages_dir.

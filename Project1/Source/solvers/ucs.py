@@ -109,7 +109,7 @@ class UCSSolver(BaseSolver):
 
         id_cnt = 0
         nodes_expanded = 0 # Number of Node pop from frontier and get_successor
-        nodes_generated = 0 # Number of Node push into frontier
+        nodes_generated = 1 # Number of Node push into frontier (including root)
         
         frontier = [] # [GameState, cost]
         best_g_cost = {initial_state: 0} #Dict[GameState, float]

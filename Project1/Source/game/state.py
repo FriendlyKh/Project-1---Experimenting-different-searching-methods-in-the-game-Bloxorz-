@@ -51,7 +51,6 @@ class GameState:
             and (self.block.r, self.block.c) == board.goal_pos
         )
 
-        return False
     def is_valid(self, board: Board) -> bool:
         """
         Validates if the current state is physically supported and legal:
