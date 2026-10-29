@@ -67,8 +67,23 @@ def _stage_sort_key(path):
             name = json.load(f).get("name", "")
     except Exception:
         name = ""
+    stem = path.stem.lower()
     m = re.search(r"\d+", name)
-    return (int(m.group()) if m else 10**9, path.name)
+    num = int(m.group()) if m else 10**9
+    prefix_order = {
+        "stage_": 0,
+        "pro_dfs_": 1,
+        "pro_bfs_": 2,
+        "pro_ucs_": 3,
+        "pro_astar_": 4,
+        "con_astar_": 5,
+    }
+    group = 6
+    for prefix, rank in prefix_order.items():
+        if stem.startswith(prefix):
+            group = rank
+            break
+    return (group, num, path.name)
 
 
 class BloxorzApp:
