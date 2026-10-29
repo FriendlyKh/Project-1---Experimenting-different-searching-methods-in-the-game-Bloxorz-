@@ -1,0 +1,87 @@
+{
+  "name": "Stage 22 - The Four-Wing Compass Hub",
+  "grid": [
+    "000001111100000000",
+    "000001111100000000",
+    "000001111100000000",
+    "000001111100000000",
+    "000001111100000000",
+    "111111111100000000",
+    "111111111111111110",
+    "111111111111111120",
+    "111111111111111110",
+    "111111111100000000",
+    "000001111100000000",
+    "000001111100000000",
+    "000001111100000000",
+    "000001111100000000",
+    "444441111100000000"
+  ],
+  "start": [
+    7,
+    7
+  ],
+  "goal": [
+    7,
+    16
+  ],
+  "bridges": [
+    {
+      "id": "B1",
+      "cells": [[14, 0]],
+      "initially_open": false
+    },
+    {
+      "id": "B2",
+      "cells": [[14, 1]],
+      "initially_open": false
+    },
+    {
+      "id": "B3",
+      "cells": [[14, 2]],
+      "initially_open": false
+    },
+    {
+      "id": "B4",
+      "cells": [[14, 3]],
+      "initially_open": false
+    },
+    {
+      "id": "B5",
+      "cells": [[14, 4]],
+      "initially_open": false
+    }
+  ],
+  "switches": [
+    {
+      "pos": [4, 7],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["B1"]
+    },
+    {
+      "pos": [2, 6],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["B2"]
+    },
+    {
+      "pos": [2, 8],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["B3"]
+    },
+    {
+      "pos": [7, 4],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["B4"]
+    },
+    {
+      "pos": [10, 7],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["B5"]
+    }
+  ]
+}

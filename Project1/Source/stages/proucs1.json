@@ -1,0 +1,162 @@
+{
+  "name": "Stage 19 - Switch vs Fragile",
+  "grid": [
+    "000000000000000000",
+    "033333333330000000",
+    "033333333330000000",
+    "033333333330020000",
+    "033333333330040000",
+    "011110000000040000",
+    "011114414414410000",
+    "011110000000000000",
+    "033333333330000000",
+    "033333333330000000",
+    "033333333330000000",
+    "444444400000000000"
+  ],
+  "start": [
+    6,
+    1
+  ],
+  "goal": [
+    3,
+    13
+  ],
+  "bridges": [
+    {
+      "id": "B1",
+      "cells": [
+        [6, 5],
+        [6, 6]
+      ],
+      "initially_open": false
+    },
+    {
+      "id": "B2",
+      "cells": [
+        [6, 8],
+        [6, 9]
+      ],
+      "initially_open": false
+    },
+    {
+      "id": "B3",
+      "cells": [
+        [6, 11],
+        [6, 12]
+      ],
+      "initially_open": false
+    },
+    {
+      "id": "B4",
+      "cells": [
+        [4, 13],
+        [5, 13]
+      ],
+      "initially_open": false
+    },
+    {
+      "id": "D1",
+      "cells": [[11, 0]],
+      "initially_open": false
+    },
+    {
+      "id": "D2",
+      "cells": [[11, 1]],
+      "initially_open": false
+    },
+    {
+      "id": "D3",
+      "cells": [[11, 2]],
+      "initially_open": false
+    },
+    {
+      "id": "D4",
+      "cells": [[11, 3]],
+      "initially_open": false
+    },
+    {
+      "id": "D5",
+      "cells": [[11, 4]],
+      "initially_open": false
+    },
+    {
+      "id": "D6",
+      "cells": [[11, 5]],
+      "initially_open": false
+    },
+    {
+      "id": "D7",
+      "cells": [[11, 6]],
+      "initially_open": false
+    }
+  ],
+  "switches": [
+    {
+      "pos": [6, 3],
+      "type": "soft",
+      "operation": "permanent",
+      "linked_bridges": ["B1"]
+    },
+    {
+      "pos": [6, 4],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["D7"]
+    },
+    {
+      "pos": [6, 7],
+      "type": "soft",
+      "operation": "permanent",
+      "linked_bridges": ["B2"]
+    },
+    {
+      "pos": [6, 10],
+      "type": "soft",
+      "operation": "permanent",
+      "linked_bridges": ["B3"]
+    },
+    {
+      "pos": [6, 13],
+      "type": "soft",
+      "operation": "permanent",
+      "linked_bridges": ["B4"]
+    },
+    {
+      "pos": [2, 3],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["D1"]
+    },
+    {
+      "pos": [2, 6],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["D2"]
+    },
+    {
+      "pos": [2, 9],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["D3"]
+    },
+    {
+      "pos": [9, 3],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["D4"]
+    },
+    {
+      "pos": [9, 6],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["D5"]
+    },
+    {
+      "pos": [9, 9],
+      "type": "soft",
+      "operation": "toggle",
+      "linked_bridges": ["D6"]
+    }
+  ]
+}
