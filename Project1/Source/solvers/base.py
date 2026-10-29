@@ -106,7 +106,7 @@ class BaseSolver(ABC):
     def solve(
         self,
         env: BloxorzEnv,
-        timeout: float = 60.0,
+        timeout: float = 120.0,
     ) -> SearchResult:
         """
         Executes search on the given environment, measuring time and memory.
