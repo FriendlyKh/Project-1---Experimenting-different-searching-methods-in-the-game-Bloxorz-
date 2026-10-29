@@ -12,7 +12,7 @@ Assigned to: Member 4 (GUI & Visualization)
 """
 
 import math
-from typing import Tuple, List, Dict, Optional
+from typing import Tuple, List, Dict, Optional, Any
 import pygame
 
 from ..game.constants import TileType, SwitchType, Orientation
@@ -127,6 +127,11 @@ class GameRenderer:
     # ========================================================================
     # CAMERA CONTROLS (PAN, ZOOM, ORBIT 3D VIEWPOINT)
     # ========================================================================
+
+    def update_dimensions(self, surface: pygame.Surface, board_area: pygame.Rect):
+        """Updates rendering surface and board viewport rect when window is resized."""
+        self.surface = surface
+        self.board_area = board_area
 
     def reset_camera(self):
         """Resets camera pan, zoom, and 3D viewpoint angles to default."""
@@ -271,6 +276,7 @@ class GameRenderer:
         death_anim_t: float = -1.0,
         level_transition_t: float = -1.0,
         level_transition_dir: int = 1,
+        cam_buttons: Optional[List[Any]] = None,
     ):
         """
         Full frame render of the canvas, playmat, 3D/2D board, animated block,
@@ -399,6 +405,11 @@ class GameRenderer:
                 border_color=(242, 106, 132),
                 title_color=(198, 52, 82),
             )
+
+        # 5b. Floating camera buttons on playmat (drawn BEFORE transition overlay so transition covers them!)
+        if cam_buttons:
+            for btn in cam_buttons:
+                btn.draw(self.surface)
 
         # 6. Level-swipe transition overlay (drawn last so it covers everything)
         if level_transition_t >= 0:

@@ -29,7 +29,7 @@ except ImportError:
     from Source.game.environment import BloxorzEnv
     from Source.solvers.bfs import BFSSolver
     from Source.solvers.dfs import DFSSolver, IDSSolver
-    from Source.solvers.ucs import UCSSolver, default_cost_function
+    from Source.solvers.ucs import UCSSolver, default_cost_function, custom_cost_function
     from Source.solvers.astar import AStarSolver
     from Source.solvers.heuristics import manhattan_heuristic, orientation_aware_heuristic
 
@@ -59,7 +59,7 @@ def run_cli_solver(
     solver_name: str,
     heuristic_name: str = "manhattan",
     cost_name: str = "default",
-    timeout: float = 60.0,
+    timeout: float = 90.0,
 ):
     """Executes a solver on a stage from the command line and prints results."""
     resolved_file = resolve_stage_path(str(stage_file))

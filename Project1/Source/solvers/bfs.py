@@ -62,7 +62,7 @@ class BFSSolver(BaseSolver):
         root_node = SearchNode(state=initial_state)
 
         expanded_nodes_count = 0
-        generated_nodes_count = 0
+        generated_nodes_count = 1
 
         if initial_state.is_goal(env.board):
             return (root_node, expanded_nodes_count, generated_nodes_count)
