@@ -115,7 +115,7 @@ class UCSSolver(BaseSolver):
         best_g_cost = {initial_state: 0} #Dict[GameState, float]
         heapq.heappush(frontier, start_node) #SearchNode has comparasion method
 
-        while frontier and (time.perf_counter() - start_time) < timeout:
+        while frontier and (not timeout or (time.perf_counter() - start_time) < timeout):
             cur_node = heapq.heappop(frontier)
             cur_state = cur_node.state
 
@@ -129,7 +129,7 @@ class UCSSolver(BaseSolver):
             nodes_expanded += 1
  
             for action, next_state, step_cost in env.get_successors(cur_state, self.cost_fn):
-                new_g = cur_node.g_cost + step_cost
+                new_g = round(cur_node.g_cost + step_cost, 6)
 
                 if new_g < best_g_cost.get(next_state, float('inf')):
                     best_g_cost[next_state] = new_g

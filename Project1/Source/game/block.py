@@ -19,6 +19,18 @@ class Block:
        - Defined by cube1 (r1, c1), cube2 (r2, c2), and active_cube index (0 or 1).
     """
 
+    __slots__ = (
+        "r",
+        "c",
+        "orientation",
+        "is_split",
+        "cube1",
+        "cube2",
+        "active_cube",
+        "_key",
+        "_cells",
+    )
+
     def __init__(
             self,
             r: int,
@@ -33,23 +45,31 @@ class Block:
         self.c = c
         self.orientation = orientation
         self.is_split = is_split
-        self.cube1 = cube1 if cube1 is not None else (r, c)
-        self.cube2 = cube2 if cube2 is not None else (r, c)
+        c1 = cube1 if cube1 is not None else (r, c)
+        c2 = cube2 if cube2 is not None else (r, c)
+        self.cube1 = c1
+        self.cube2 = c2
         self.active_cube = active_cube
 
-    def occupied_cells(self) -> List[Tuple[int, int]]:
-        """
-        Returns list of (row, col) coordinates currently occupied by the block.
-        """
-        if self.is_split:
-            return [self.cube1, self.cube2]
+        if is_split:
+            pair = (c1, c2) if c1 <= c2 else (c2, c1)
+            active_pos = c1 if active_cube == 0 else c2
+            self._key = ("SPLIT", pair, active_pos)
+            self._cells = (c1, c2)
         else:
-            if self.orientation == Orientation.STANDING:
-                return [(self.r, self.c)]
-            if self.orientation == Orientation.LYING_H:
-                return [(self.r, self.c), (self.r, self.c + 1)]
-            elif self.orientation == Orientation.LYING_V:
-                return [(self.r, self.c), (self.r + 1, self.c)]
+            self._key = ("STANDARD", r, c, orientation.value)
+            if orientation == Orientation.STANDING:
+                self._cells = ((r, c),)
+            elif orientation == Orientation.LYING_H:
+                self._cells = ((r, c), (r, c + 1))
+            else:
+                self._cells = ((r, c), (r + 1, c))
+
+    def occupied_cells(self) -> Tuple[Tuple[int, int], ...]:
+        """
+        Returns tuple of (row, col) coordinates currently occupied by the block.
+        """
+        return self._cells
 
     def roll(self, direction: Direction) -> "Block":
         """
@@ -157,17 +177,14 @@ class Block:
     
     def to_tuple(self) -> tuple:
         """Returns canonical tuple for hashing in GameState."""
-        if self.is_split:
-            active_pos = self.cube1 if self.active_cube == 0 else self.cube2
-            return ("SPLIT", tuple(sorted([self.cube1, self.cube2])), active_pos)
-        return ("STANDARD", self.r, self.c, self.orientation.value)
+        return self._key
 
 
     def __eq__(self, other):
-        return isinstance(other, Block) and self.to_tuple() == other.to_tuple()
+        return isinstance(other, Block) and self._key == other._key
 
     def __hash__(self):
-        return hash(self.to_tuple())
+        return hash(self._key)
     
     def __repr__(self) -> str:
         if self.is_split:

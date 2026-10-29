@@ -15,7 +15,7 @@ for p in (CURRENT_DIR, PARENT_DIR):
         sys.path.insert(0, str(p))
 
 try:
-    from config import STAGES_DIR, OUTPUT_DIR
+    from config import STAGES_DIR, OUTPUT_DIR, DEFAULT_SEARCH_TIMEOUT
     from game.stage_loader import StageLoader
     from game.environment import BloxorzEnv
     from solvers.bfs import BFSSolver
@@ -24,7 +24,7 @@ try:
     from solvers.astar import AStarSolver
     from solvers.heuristics import manhattan_heuristic
 except ImportError:
-    from Source.config import STAGES_DIR, OUTPUT_DIR
+    from Source.config import STAGES_DIR, OUTPUT_DIR, DEFAULT_SEARCH_TIMEOUT
     from Source.game.stage_loader import StageLoader
     from Source.game.environment import BloxorzEnv
     from Source.solvers.bfs import BFSSolver
@@ -59,7 +59,7 @@ def run_cli_solver(
     solver_name: str,
     heuristic_name: str = "manhattan",
     cost_name: str = "default",
-    timeout: float = 120.0,
+    timeout: float = DEFAULT_SEARCH_TIMEOUT,
 ):
     """Executes a solver on a stage from the command line and prints results."""
     resolved_file = resolve_stage_path(str(stage_file))
@@ -186,8 +186,8 @@ def main():
     parser.add_argument(
         "--timeout",
         type=float,
-        default=60.0,
-        help="Search timeout in seconds (default: 60.0)",
+        default=DEFAULT_SEARCH_TIMEOUT,
+        help=f"Search timeout in seconds (default: {DEFAULT_SEARCH_TIMEOUT})",
     )
     parser.add_argument(
         "--benchmark",

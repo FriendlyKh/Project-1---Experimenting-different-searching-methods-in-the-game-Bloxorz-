@@ -9,7 +9,7 @@ import time
 from pathlib import Path
 from typing import List, Dict, Any
 
-from ..config import STAGES_DIR, OUTPUT_DIR
+from ..config import STAGES_DIR, OUTPUT_DIR, DEFAULT_SEARCH_TIMEOUT
 from ..game.stage_loader import StageLoader
 from ..game.environment import BloxorzEnv
 from ..solvers.bfs import BFSSolver
@@ -39,7 +39,7 @@ def _benchmark_stage_sort_key(path: Path):
 def run_benchmarks(
     stages_dir: Path = STAGES_DIR,
     output_dir: Path = OUTPUT_DIR,
-    timeout: float = 120.0,
+    timeout: float = DEFAULT_SEARCH_TIMEOUT,
 ) -> List[Dict[str, Any]]:
     """
     Executes all search algorithms on each stage found in stages_dir.
@@ -53,7 +53,7 @@ def run_benchmarks(
 
     solvers = [
         BFSSolver(),
-        DFSSolver(max_depth=300),
+        DFSSolver(),
         UCSSolver(),
         AStarSolver(),
     ]

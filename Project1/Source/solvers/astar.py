@@ -67,7 +67,7 @@ class AStarSolver(BaseSolver):
         # Tracks lowest path cost g(s) found so far to each visited GameState
         best_g_costs: Dict[GameState, float] = {initial_state: 0.0}
 
-        while frontier and (time.perf_counter() - start_time) < timeout:
+        while frontier and (not timeout or (time.perf_counter() - start_time) < timeout):
             current_node = heapq.heappop(frontier)
 
             # Lazy pruning: skip node if a strictly cheaper path to this state was already expanded
