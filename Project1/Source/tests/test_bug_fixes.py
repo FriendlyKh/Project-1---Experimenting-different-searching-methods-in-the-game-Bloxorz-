@@ -207,3 +207,15 @@ def test_renderer_narrow_screen_camera_hud():
     # Must draw without colliding with camera buttons or raising errors
     renderer._draw_camera_hud_strip(mode="2.5D")
     renderer._draw_canvas_background(board, mode="2.5D", explored_cells={}, replay_states=[], replay_idx=0)
+
+
+def test_astar_strictly_pure_manhattan():
+    from Source.solvers.heuristics import manhattan_heuristic
+
+    solver = AStarSolver()
+    assert solver.heuristic_fn is manhattan_heuristic
+
+    # Even if initialized with dummy or different callable, it strictly binds to pure manhattan
+    dummy_fn = lambda s, b: 0.0
+    solver2 = AStarSolver(heuristic_fn=dummy_fn)
+    assert solver2.heuristic_fn is manhattan_heuristic

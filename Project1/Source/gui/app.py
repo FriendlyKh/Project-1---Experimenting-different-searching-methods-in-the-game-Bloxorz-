@@ -64,7 +64,7 @@ from ..solvers.bfs import BFSSolver
 from ..solvers.dfs import DFSSolver
 from ..solvers.ucs import UCSSolver, custom_cost_function
 from ..solvers.astar import AStarSolver
-from ..solvers.heuristics import orientation_aware_heuristic
+from ..solvers.heuristics import manhattan_heuristic
 from ..solvers.base import SearchResult
 from .renderer import GameRenderer
 from .widgets import Button, ModeToggleSwitch, draw_pastel_card, Dropdown, BenchmarkModal
@@ -340,7 +340,7 @@ class BloxorzApp:
         self.btn_astar = Button(
             rect=(inner_x + half_w + 8, y_solv + lay["solv_row2"], half_w, solv_h),
             text="Solve A*",
-            on_click=lambda: self.start_solver_async(AStarSolver(heuristic_fn=orientation_aware_heuristic)),
+            on_click=lambda: self.start_solver_async(AStarSolver(heuristic_fn=manhattan_heuristic)),
             bg_color=BTN_MINT[0],
             hover_color=BTN_MINT[1],
             shadow_color=BTN_MINT[2],
@@ -763,7 +763,7 @@ class BloxorzApp:
                 BFSSolver(),
                 DFSSolver(max_depth=400),
                 UCSSolver(cost_fn=custom_cost_function),
-                AStarSolver(heuristic_fn=orientation_aware_heuristic),
+                AStarSolver(heuristic_fn=manhattan_heuristic),
             ]
             results = []
             for i, s in enumerate(solvers):

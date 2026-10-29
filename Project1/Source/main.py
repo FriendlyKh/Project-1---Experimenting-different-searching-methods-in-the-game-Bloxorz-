@@ -22,7 +22,7 @@ try:
     from solvers.dfs import DFSSolver, IDSSolver
     from solvers.ucs import UCSSolver, default_cost_function, custom_cost_function
     from solvers.astar import AStarSolver
-    from solvers.heuristics import manhattan_heuristic, orientation_aware_heuristic
+    from solvers.heuristics import manhattan_heuristic
 except ImportError:
     from Source.config import STAGES_DIR, OUTPUT_DIR
     from Source.game.stage_loader import StageLoader
@@ -31,7 +31,7 @@ except ImportError:
     from Source.solvers.dfs import DFSSolver, IDSSolver
     from Source.solvers.ucs import UCSSolver, default_cost_function, custom_cost_function
     from Source.solvers.astar import AStarSolver
-    from Source.solvers.heuristics import manhattan_heuristic, orientation_aware_heuristic
+    from Source.solvers.heuristics import manhattan_heuristic
 
 
 def resolve_stage_path(stage_str: str) -> Path:
@@ -71,12 +71,8 @@ def run_cli_solver(
     board = StageLoader.load_from_file(resolved_file)
     env = BloxorzEnv(board)
 
-    # Heuristic selection for A*
-    heuristics = {
-        "manhattan": manhattan_heuristic,
-        "orientation": orientation_aware_heuristic,
-    }
-    heuristic_fn = heuristics.get(heuristic_name.lower(), manhattan_heuristic)
+    # A* strictly uses pure Manhattan distance heuristic
+    heuristic_fn = manhattan_heuristic
     cost_fn = custom_cost_function if cost_name.lower() == "custom" else default_cost_function
     # Solvers dictionary
     solvers = {
@@ -95,7 +91,7 @@ def run_cli_solver(
     print("\n" + "=" * 60)
     print(f"Solving {resolved_file.name} using {solver.name}")
     if solver_name.lower() == "astar":
-        print(f"Heuristic: {heuristic_name}")
+        print("Heuristic: Pure Manhattan Distance")
     print("=" * 60)
 
     result = solver.solve(env, timeout=timeout)
@@ -154,7 +150,7 @@ def main():
   python main.py                                          # Launch interactive GUI
   python main.py --cli --stage stage_01_core.json         # Run A* on Stage 1
   python main.py --cli --stage stage_03_bridge.json --solver bfs
-  python main.py --cli --solver astar --heuristic orientation
+  python main.py --cli --solver astar                     # Run A* (Pure Manhattan)
   python main.py --benchmark                              # Run all stages & export CSV/JSON
   python main.py --plot                                   # Generate comparison bar charts
 """,
@@ -177,8 +173,8 @@ def main():
         "--heuristic",
         type=str,
         default="manhattan",
-        choices=["manhattan", "orientation"],
-        help="Heuristic function for A* (default: manhattan)",
+        choices=["manhattan"],
+        help="Heuristic function for A* (strictly pure manhattan)",
     )
     parser.add_argument(
         "--cost",
