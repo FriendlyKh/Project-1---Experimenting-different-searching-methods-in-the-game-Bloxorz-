@@ -29,7 +29,7 @@ except ImportError:
     from Source.game.environment import BloxorzEnv
     from Source.solvers.bfs import BFSSolver
     from Source.solvers.dfs import DFSSolver, IDSSolver
-    from Source.solvers.ucs import UCSSolver, default_cost_function
+    from Source.solvers.ucs import UCSSolver, default_cost_function, custom_cost_function
     from Source.solvers.astar import AStarSolver
     from Source.solvers.heuristics import manhattan_heuristic, orientation_aware_heuristic
 

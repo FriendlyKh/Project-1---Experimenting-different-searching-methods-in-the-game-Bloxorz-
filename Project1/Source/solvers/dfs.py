@@ -77,6 +77,10 @@ class DFSSolver(BaseSolver):
 
             current_node = stack.pop()
 
+            # Prune if this state was reached earlier with a shallower depth
+            if current_node.depth > visited.get(current_node.state, float("inf")):
+                continue
+
             if current_node.state.is_goal(env.board):
                 return current_node, expanded_count, generated_count
 
@@ -152,6 +156,9 @@ class IDSSolver(BaseSolver):
                     return None, total_expanded, total_generated
 
                 current_node = stack.pop()
+
+                if current_node.depth > visited_at_depth.get(current_node.state, float("inf")):
+                    continue
 
                 if current_node.state.is_goal(env.board):
                     return current_node, total_expanded, total_generated
