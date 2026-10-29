@@ -94,3 +94,10 @@ class DFSSolver(BaseSolver):
                     generated_count += 1
 
         return None, expanded_count, generated_count
+
+
+class IDSSolver(BaseSolver):
+    """
+    Iterative Deepening Search (Optional alternative to DFS, Section 3.3).
+    """
+    pass
