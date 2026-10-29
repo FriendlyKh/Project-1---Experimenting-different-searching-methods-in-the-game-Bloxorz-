@@ -60,12 +60,12 @@
     },
     {
       "id": "B6",
-      "cells": [[23, 13], [24, 13]],
+      "cells": [[23, 15], [24, 15]],
       "initially_open": false
     },
     {
       "id": "B7",
-      "cells": [[24, 8], [24, 11]],
+      "cells": [[24, 8], [24, 13]],
       "initially_open": false
     },
     {
@@ -104,7 +104,7 @@
       "type": "split",
       "operation": "permanent",
       "linked_bridges": [],
-      "split_targets": [[20, 6], [20, 14]]
+      "split_targets": [[20, 6], [20, 16]]
     },
     {
       "pos": [22, 6],
@@ -113,13 +113,13 @@
       "linked_bridges": ["B6"]
     },
     {
-      "pos": [22, 14],
+      "pos": [22, 16],
       "type": "soft",
       "operation": "permanent",
       "linked_bridges": ["B5"]
     },
     {
-      "pos": [24, 12],
+      "pos": [24, 14],
       "type": "soft",
       "operation": "permanent",
       "linked_bridges": ["B7"]

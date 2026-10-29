@@ -18,6 +18,24 @@ from ..solvers.ucs import UCSSolver
 from ..solvers.astar import AStarSolver
 
 
+def _benchmark_stage_sort_key(path: Path):
+    stem = path.stem.lower()
+    prefix_order = {
+        "stage_": 0,
+        "pro_dfs_": 1,
+        "pro_bfs_": 2,
+        "pro_ucs_": 3,
+        "pro_astar_": 4,
+        "con_astar_": 5,
+    }
+    group = 6
+    for prefix, rank in prefix_order.items():
+        if stem.startswith(prefix):
+            group = rank
+            break
+    return (group, path.name)
+
+
 def run_benchmarks(
     stages_dir: Path = STAGES_DIR,
     output_dir: Path = OUTPUT_DIR,
@@ -27,7 +45,7 @@ def run_benchmarks(
     Executes all search algorithms on each stage found in stages_dir.
     """
     output_dir.mkdir(parents=True, exist_ok=True)
-    stage_files = sorted(list(stages_dir.glob("*.json")))
+    stage_files = sorted(list(stages_dir.glob("*.json")), key=_benchmark_stage_sort_key)
 
     if not stage_files:
         print(f"[!] No stages found in {stages_dir}")
