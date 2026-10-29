@@ -18,19 +18,26 @@ class GameState:
     - Open/closed status of all bridges (as an immutable tuple of (bridge_id, is_open))
     """
 
+    __slots__ = ("block", "bridge_states", "_cached_hash", "_cached_dict")
+
     def __init__(
         self,
         block: Block,
         bridge_states: Tuple[Tuple[str, bool], ...], #((id, is_open))
+        *,
+        _canonical: bool = False,
     ):
         self.block = block
         # Bridge states stored as canonical sorted tuple for consistent hashing
-        self.bridge_states = tuple(sorted(bridge_states, key=lambda x: x[0])) #Sorted with id
-        self._cached_hash: Optional[int] = None
+        if _canonical or len(bridge_states) <= 1:
+            self.bridge_states = bridge_states
+        else:
+            self.bridge_states = tuple(sorted(bridge_states, key=lambda x: x[0])) #Sorted with id
+        self._cached_hash: int = hash((block._key, self.bridge_states))
         self._cached_dict: Optional[Dict[str, bool]] = None
 
     @property
-    def bridge_dict(self) -> Dict[str, bool] | None:
+    def bridge_dict(self) -> Dict[str, bool]:
         """Returns bridge states as a dictionary for convenient lookup."""
         if self._cached_dict is None:
             self._cached_dict = dict(self.bridge_states)
@@ -59,12 +66,21 @@ class GameState:
            A fragile tile breaks if the 1x1x2 block stands upright on it.
 
         """
-        cells = self.block.occupied_cells()
-        for cell in cells:
-            if not (board.is_passable(cell[0], cell[1], self.bridge_dict)):
+        rows = board.rows
+        cols = board.cols
+        grid = board.grid
+        for r, c in self.block._cells:
+            if not (0 <= r < rows and 0 <= c < cols):
                 return False
+            tile = grid[r][c]
+            if tile == TileType.VOID:
+                return False
+            if tile == TileType.BRIDGE:
+                bridge_id = board.cell_to_bridge.get((r, c))
+                if bridge_id is None or not self.bridge_dict.get(bridge_id, False):
+                    return False
         if (not self.block.is_split) and (self.block.orientation == Orientation.STANDING):
-            if board.get_base_tile(self.block.r,self.block.c) == TileType.FRAGILE:
+            if grid[self.block.r][self.block.c] == TileType.FRAGILE:
                 return False
         return True
 
@@ -72,17 +88,20 @@ class GameState:
         """
         Computes state hash for set() and dict lookups.
         """
-        if getattr(self, '_cached_hash', None) is None:
-            self._cached_hash = hash((self.block.to_tuple(), self.bridge_states))
         return self._cached_hash
 
     def __eq__(self, other: object) -> bool:
         """
         Checks equality between two game states.
         """
-        if (GameState == type(other)) and (self.block == other.block) and (self.bridge_states == other.bridge_states):
+        if self is other:
             return True
-        return False
+        return (
+            type(other) is GameState
+            and self._cached_hash == other._cached_hash
+            and self.block._key == other.block._key
+            and self.bridge_states == other.bridge_states
+        )
 
     def __repr__(self) -> str:
         return f"GameState(block={self.block}, bridges={dict(self.bridge_states)})"

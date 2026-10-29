@@ -55,6 +55,7 @@ from ..config import (
     BTN_LAVENDER,
     BTN_NEUTRAL,
     STAGES_DIR,
+    DEFAULT_SEARCH_TIMEOUT,
 )
 from ..game.constants import Direction
 from ..game.stage_loader import StageLoader
@@ -318,7 +319,7 @@ class BloxorzApp:
         self.btn_dfs = Button(
             rect=(inner_x + half_w + 8, y_solv + 26, half_w, solv_h),
             text="Solve DFS",
-            on_click=lambda: self.start_solver_async(DFSSolver(max_depth=400)),
+            on_click=lambda: self.start_solver_async(DFSSolver()),
             bg_color=BTN_LAVENDER[0],
             hover_color=BTN_LAVENDER[1],
             shadow_color=BTN_LAVENDER[2],
@@ -734,7 +735,7 @@ class BloxorzApp:
 
         cur_stage = self.current_stage_idx
         def worker():
-            res = solver.solve(self.env)
+            res = solver.solve(self.env, timeout=DEFAULT_SEARCH_TIMEOUT)
             if not self.waiting_cancel_event.is_set():
                 self.async_worker_queue.put(("single", solver, res, cur_stage))
 
@@ -761,7 +762,7 @@ class BloxorzApp:
         def worker():
             solvers = [
                 BFSSolver(),
-                DFSSolver(max_depth=400),
+                DFSSolver(),
                 UCSSolver(cost_fn=custom_cost_function),
                 AStarSolver(heuristic_fn=manhattan_heuristic),
             ]
@@ -770,7 +771,7 @@ class BloxorzApp:
                 if self.waiting_cancel_event.is_set():
                     break
                 self.waiting_subtitle = f"Evaluating {s.name} ({i+1}/4)..."
-                res = s.solve(self.env, timeout=20.0)
+                res = s.solve(self.env, timeout=DEFAULT_SEARCH_TIMEOUT)
                 results.append({
                     "algorithm": s.name,
                     "success": res.success,

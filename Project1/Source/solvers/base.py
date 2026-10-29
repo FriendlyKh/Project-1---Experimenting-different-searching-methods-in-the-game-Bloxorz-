@@ -8,12 +8,13 @@ import tracemalloc
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import List, Optional, Tuple, Any
+from ..config import DEFAULT_SEARCH_TIMEOUT
 from ..game.state import GameState
 from ..game.constants import Direction
 from ..game.environment import BloxorzEnv
 
 
-@dataclass
+@dataclass(slots=True)
 class SearchNode:
     """
     Search tree / graph node.
@@ -106,7 +107,7 @@ class BaseSolver(ABC):
     def solve(
         self,
         env: BloxorzEnv,
-        timeout: float = 120.0,
+        timeout: float = DEFAULT_SEARCH_TIMEOUT,
     ) -> SearchResult:
         """
         Executes search on the given environment, measuring time and memory.
@@ -114,18 +115,20 @@ class BaseSolver(ABC):
         was_tracing = tracemalloc.is_tracing()
         if not was_tracing:
             tracemalloc.start()
+        else:
+            tracemalloc.reset_peak()
         start_time = time.perf_counter()
 
         goal_node = None
         expanded = 0
         generated = 0
         status_msg = "Completed"
+        had_error = False
 
         try:
             goal_node, expanded, generated = self._search(env, timeout)
-            if goal_node is None:
-                status_msg = "No solution found or timed out"
         except Exception as e:
+            had_error = True
             status_msg = f"Error: {str(e)}"
         finally:
             elapsed = time.perf_counter() - start_time
@@ -135,6 +138,12 @@ class BaseSolver(ABC):
                     tracemalloc.stop()
             else:
                 peak_mem = 0
+
+        if not had_error and goal_node is None:
+            if timeout and elapsed >= timeout:
+                status_msg = f"Timed out ({timeout:.0f}s)"
+            else:
+                status_msg = "No solution found"
 
         peak_kb = peak_mem / 1024.0
 

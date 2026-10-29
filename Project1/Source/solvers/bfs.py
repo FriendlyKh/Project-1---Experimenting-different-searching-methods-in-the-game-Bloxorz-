@@ -70,7 +70,7 @@ class BFSSolver(BaseSolver):
         frontier = deque([root_node])
         visited = set([initial_state])
 
-        while frontier and (time.perf_counter() - start_time) < timeout:
+        while frontier and (not timeout or (time.perf_counter() - start_time) < timeout):
             current_node = frontier.popleft()
             expanded_nodes_count += 1
 
