@@ -1,0 +1,143 @@
+[+] Testing Stage: stage_01_core
+  -> Running BFS... [BFS] SOLVED | Moves: 4 | Cost: 4.00 | Time: 0.79 ms | Memory: 12.39 KB | Expanded: 5 | Generated: 8
+  -> Running DFS... [DFS] SOLVED | Moves: 4 | Cost: 4.00 | Time: 0.55 ms | Memory: 7.68 KB | Expanded: 4 | Generated: 8
+  -> Running UCS... [UCS] SOLVED | Moves: 4 | Cost: 4.00 | Time: 1.70 ms | Memory: 7.64 KB | Expanded: 8 | Generated: 11
+  -> Running A*... [A*] SOLVED | Moves: 4 | Cost: 4.00 | Time: 0.91 ms | Memory: 6.87 KB | Expanded: 7 | Generated: 11
+
+[+] Testing Stage: stage_02_fragile
+  -> Running BFS... [BFS] SOLVED | Moves: 7 | Cost: 7.00 | Time: 5.35 ms | Memory: 37.45 KB | Expanded: 47 | Generated: 62
+  -> Running DFS... [DFS] SOLVED | Moves: 29 | Cost: 29.00 | Time: 3.68 ms | Memory: 28.24 KB | Expanded: 39 | Generated: 56
+  -> Running UCS... [UCS] SOLVED | Moves: 7 | Cost: 7.00 | Time: 6.38 ms | Memory: 32.04 KB | Expanded: 38 | Generated: 59
+  -> Running A*... [A*] SOLVED | Moves: 7 | Cost: 7.00 | Time: 2.74 ms | Memory: 23.54 KB | Expanded: 24 | Generated: 43
+
+[+] Testing Stage: stage_03_bridge
+  -> Running BFS... [BFS] SOLVED | Moves: 7 | Cost: 7.00 | Time: 5.96 ms | Memory: 49.79 KB | Expanded: 52 | Generated: 74
+  -> Running DFS... [DFS] SOLVED | Moves: 56 | Cost: 56.00 | Time: 9.39 ms | Memory: 68.68 KB | Expanded: 79 | Generated: 113
+  -> Running UCS... [UCS] SOLVED | Moves: 7 | Cost: 6.50 | Time: 8.83 ms | Memory: 57.03 KB | Expanded: 65 | Generated: 94
+  -> Running A*... [A*] SOLVED | Moves: 7 | Cost: 7.00 | Time: 2.51 ms | Memory: 19.57 KB | Expanded: 22 | Generated: 39
+
+[+] Testing Stage: stage_04_split
+  -> Running BFS... [BFS] SOLVED | Moves: 17 | Cost: 17.00 | Time: 15.57 ms | Memory: 77.30 KB | Expanded: 119 | Generated: 145
+  -> Running DFS... [DFS] SOLVED | Moves: 52 | Cost: 52.00 | Time: 10.33 ms | Memory: 63.18 KB | Expanded: 79 | Generated: 122
+  -> Running UCS... [UCS] SOLVED | Moves: 17 | Cost: 16.40 | Time: 23.66 ms | Memory: 102.27 KB | Expanded: 149 | Generated: 174
+  -> Running A*... [A*] SOLVED | Moves: 17 | Cost: 17.00 | Time: 4.90 ms | Memory: 26.21 KB | Expanded: 36 | Generated: 54
+
+[+] Testing Stage: stage_05_labyrinth
+  -> Running BFS... [BFS] SOLVED | Moves: 57 | Cost: 57.00 | Time: 1641.10 ms | Memory: 7917.04 KB | Expanded: 9695 | Generated: 9696
+  -> Running DFS... [DFS] SOLVED | Moves: 295 | Cost: 295.00 | Time: 74.12 ms | Memory: 682.54 KB | Expanded: 512 | Generated: 892
+  -> Running UCS... [UCS] SOLVED | Moves: 57 | Cost: 66.20 | Time: 2023.41 ms | Memory: 7922.36 KB | Expanded: 9694 | Generated: 10132
+  -> Running A*... [A*] SOLVED | Moves: 57 | Cost: 57.00 | Time: 1770.21 ms | Memory: 7527.21 KB | Expanded: 8918 | Generated: 9303
+
+[+] Testing Stage: stage_06_citadel
+  -> Running BFS... [BFS] SOLVED | Moves: 98 | Cost: 98.00 | Time: 3166.64 ms | Memory: 18146.40 KB | Expanded: 15723 | Generated: 15901
+  -> Running DFS... [DFS] FAILED (No solution found or timed out) | Moves: 0 | Cost: 0.00 | Time: 2594.87 ms | Memory: 17921.16 KB | Expanded: 12115 | Generated: 15587
+  -> Running UCS... [UCS] SOLVED | Moves: 98 | Cost: 185.80 | Time: 3899.91 ms | Memory: 19066.10 KB | Expanded: 15834 | Generated: 19484
+  -> Running A*... [A*] SOLVED | Moves: 98 | Cost: 98.00 | Time: 1342.15 ms | Memory: 8234.72 KB | Expanded: 6395 | Generated: 6936
+
+[+] Testing Stage: stage_07_terra_globe
+  -> Running BFS... [BFS] SOLVED | Moves: 77 | Cost: 77.00 | Time: 1272.51 ms | Memory: 8231.04 KB | Expanded: 6905 | Generated: 7027
+  -> Running DFS... [DFS] SOLVED | Moves: 276 | Cost: 276.00 | Time: 717.27 ms | Memory: 5092.60 KB | Expanded: 3782 | Generated: 4438
+  -> Running UCS... [UCS] SOLVED | Moves: 79 | Cost: 100.10 | Time: 1327.95 ms | Memory: 7884.89 KB | Expanded: 6052 | Generated: 7104
+  -> Running A*... [A*] SOLVED | Moves: 77 | Cost: 77.00 | Time: 931.66 ms | Memory: 6047.48 KB | Expanded: 4687 | Generated: 5185
+
+[+] Testing Stage: stage_08_rick_roll
+  -> Running BFS... [BFS] SOLVED | Moves: 123 | Cost: 123.00 | Time: 20098.87 ms | Memory: 100310.35 KB | Expanded: 97340 | Generated: 98544
+  -> Running DFS... [DFS] FAILED (No solution found or timed out) | Moves: 0 | Cost: 0.00 | Time: 184.03 ms | Memory: 1133.55 KB | Expanded: 1187 | Generated: 1222
+  -> Running UCS... [UCS] SOLVED | Moves: 125 | Cost: 160.60 | Time: 23423.20 ms | Memory: 105637.01 KB | Expanded: 96826 | Generated: 98060
+  -> Running A*... [A*] SOLVED | Moves: 123 | Cost: 123.00 | Time: 18815.30 ms | Memory: 88802.88 KB | Expanded: 82428 | Generated: 84765
+
+[+] Testing Stage: stage_09_anime_girl
+  -> Running BFS... [BFS] SOLVED | Moves: 79 | Cost: 79.00 | Time: 27208.27 ms | Memory: 154348.33 KB | Expanded: 124611 | Generated: 131713
+  -> Running DFS... [DFS] FAILED (No solution found or timed out) | Moves: 0 | Cost: 0.00 | Time: 8607.86 ms | Memory: 70308.03 KB | Expanded: 38723 | Generated: 59842
+  -> Running UCS... [UCS] SOLVED | Moves: 79 | Cost: 79.30 | Time: 11740.08 ms | Memory: 70750.30 KB | Expanded: 43877 | Generated: 61785
+  -> Running A*... [A*] SOLVED | Moves: 79 | Cost: 79.00 | Time: 5605.63 ms | Memory: 35559.23 KB | Expanded: 24283 | Generated: 28170
+
+[+] Testing Stage: stage_10_neko_cat
+  -> Running BFS... [BFS] SOLVED | Moves: 62 | Cost: 62.00 | Time: 1537.42 ms | Memory: 10215.46 KB | Expanded: 7890 | Generated: 8473
+  -> Running DFS... [DFS] SOLVED | Moves: 291 | Cost: 291.00 | Time: 110.89 ms | Memory: 962.74 KB | Expanded: 618 | Generated: 926
+  -> Running UCS... [UCS] SOLVED | Moves: 62 | Cost: 60.70 | Time: 725.95 ms | Memory: 4603.25 KB | Expanded: 3203 | Generated: 4249
+  -> Running A*... [A*] SOLVED | Moves: 62 | Cost: 62.00 | Time: 948.91 ms | Memory: 6195.18 KB | Expanded: 4434 | Generated: 5134
+
+[+] Testing Stage: stage_11_bad_apple
+  -> Running BFS... [BFS] SOLVED | Moves: 33 | Cost: 33.00 | Time: 16813.87 ms | Memory: 120997.09 KB | Expanded: 77638 | Generated: 97360
+  -> Running DFS... [DFS] SOLVED | Moves: 295 | Cost: 295.00 | Time: 13417.39 ms | Memory: 119503.71 KB | Expanded: 57564 | Generated: 100657
+  -> Running UCS... [UCS] SOLVED | Moves: 33 | Cost: 34.00 | Time: 2733.43 ms | Memory: 22225.05 KB | Expanded: 11412 | Generated: 17770
+  -> Running A*... [A*] SOLVED | Moves: 33 | Cost: 33.00 | Time: 645.95 ms | Memory: 5232.23 KB | Expanded: 3407 | Generated: 4346
+
+[+] Testing Stage: stage_12_heart
+  -> Running BFS... [BFS] SOLVED | Moves: 82 | Cost: 82.00 | Time: 1826.35 ms | Memory: 10578.17 KB | Expanded: 9036 | Generated: 9213
+  -> Running DFS... [DFS] SOLVED | Moves: 300 | Cost: 300.00 | Time: 305.97 ms | Memory: 2310.49 KB | Expanded: 1511 | Generated: 2158
+  -> Running UCS... [UCS] SOLVED | Moves: 84 | Cost: 129.10 | Time: 1629.04 ms | Memory: 9516.29 KB | Expanded: 6722 | Generated: 8803
+  -> Running A*... [A*] SOLVED | Moves: 82 | Cost: 82.00 | Time: 1047.14 ms | Memory: 6635.20 KB | Expanded: 4640 | Generated: 5522
+
+[+] Testing Stage: stage_13_rainbow_cat
+  -> Running BFS... [BFS] SOLVED | Moves: 124 | Cost: 124.00 | Time: 53086.28 ms | Memory: 249695.91 KB | Expanded: 248043 | Generated: 248439
+  -> Running DFS... [DFS] FAILED (No solution found or timed out) | Moves: 0 | Cost: 0.00 | Time: 279.20 ms | Memory: 1704.00 KB | Expanded: 1698 | Generated: 1785
+  -> Running UCS... [UCS] SOLVED | Moves: 127 | Cost: 172.20 | Time: 61070.98 ms | Memory: 263058.27 KB | Expanded: 240044 | Generated: 300612
+  -> Running A*... [A*] SOLVED | Moves: 124 | Cost: 124.00 | Time: 33573.43 ms | Memory: 171214.98 KB | Expanded: 146983 | Generated: 159376
+
+[+] Testing Stage: stage_14_ragebait
+  -> Running BFS... [BFS] SOLVED | Moves: 68 | Cost: 68.00 | Time: 28.44 ms | Memory: 266.80 KB | Expanded: 413 | Generated: 428
+  -> Running DFS... [DFS] SOLVED | Moves: 80 | Cost: 80.00 | Time: 5.15 ms | Memory: 62.59 KB | Expanded: 98 | Generated: 118
+  -> Running UCS... [UCS] SOLVED | Moves: 68 | Cost: 73.00 | Time: 24.98 ms | Memory: 249.71 KB | Expanded: 451 | Generated: 456
+  -> Running A*... [A*] SOLVED | Moves: 68 | Cost: 68.00 | Time: 22.71 ms | Memory: 230.46 KB | Expanded: 405 | Generated: 422
+
+[+] Testing Stage: conastar1
+  -> Running BFS... [BFS] SOLVED | Moves: 18 | Cost: 18.00 | Time: 299.78 ms | Memory: 4665.44 KB | Expanded: 3947 | Generated: 4049
+  -> Running DFS... [DFS] SOLVED | Moves: 299 | Cost: 299.00 | Time: 34.49 ms | Memory: 1044.60 KB | Expanded: 452 | Generated: 977
+  -> Running UCS... [UCS] SOLVED | Moves: 18 | Cost: 17.50 | Time: 400.60 ms | Memory: 5082.34 KB | Expanded: 4219 | Generated: 4430
+  -> Running A*... [A*] SOLVED | Moves: 18 | Cost: 18.00 | Time: 403.94 ms | Memory: 4510.34 KB | Expanded: 3526 | Generated: 4083
+
+[+] Testing Stage: conastar2
+  -> Running BFS... [BFS] SOLVED | Moves: 3 | Cost: 3.00 | Time: 1.01 ms | Memory: 16.66 KB | Expanded: 8 | Generated: 23
+  -> Running DFS... [DFS] SOLVED | Moves: 48 | Cost: 48.00 | Time: 7.70 ms | Memory: 81.95 KB | Expanded: 70 | Generated: 135
+  -> Running UCS... [UCS] SOLVED | Moves: 3 | Cost: 6.00 | Time: 3.79 ms | Memory: 31.66 KB | Expanded: 28 | Generated: 63
+  -> Running A*... [A*] SOLVED | Moves: 3 | Cost: 3.00 | Time: 1.87 ms | Memory: 16.93 KB | Expanded: 12 | Generated: 33
+
+[+] Testing Stage: proastar1
+  -> Running BFS... [BFS] SOLVED | Moves: 10 | Cost: 10.00 | Time: 378.43 ms | Memory: 4598.26 KB | Expanded: 2320 | Generated: 3936
+  -> Running DFS... [DFS] SOLVED | Moves: 300 | Cost: 300.00 | Time: 107.85 ms | Memory: 1298.45 KB | Expanded: 670 | Generated: 1280
+  -> Running UCS... [UCS] SOLVED | Moves: 10 | Cost: 10.00 | Time: 893.06 ms | Memory: 7927.07 KB | Expanded: 4448 | Generated: 6575
+  -> Running A*... [A*] SOLVED | Moves: 10 | Cost: 10.00 | Time: 9.96 ms | Memory: 95.69 KB | Expanded: 62 | Generated: 131
+
+[+] Testing Stage: proatrar2
+  -> Running BFS... [BFS] SOLVED | Moves: 6 | Cost: 6.00 | Time: 37.80 ms | Memory: 457.30 KB | Expanded: 271 | Generated: 518
+  -> Running DFS... [DFS] SOLVED | Moves: 300 | Cost: 300.00 | Time: 557.68 ms | Memory: 5668.00 KB | Expanded: 3408 | Generated: 5840
+  -> Running UCS... [UCS] SOLVED | Moves: 6 | Cost: 6.00 | Time: 98.15 ms | Memory: 853.06 KB | Expanded: 551 | Generated: 949
+  -> Running A*... [A*] SOLVED | Moves: 6 | Cost: 6.00 | Time: 1.06 ms | Memory: 8.75 KB | Expanded: 6 | Generated: 16
+
+[+] Testing Stage: probfs1
+  -> Running BFS... [BFS] SOLVED | Moves: 8 | Cost: 8.00 | Time: 1.10 ms | Memory: 7.37 KB | Expanded: 11 | Generated: 11
+  -> Running DFS... [DFS] SOLVED | Moves: 8 | Cost: 8.00 | Time: 0.80 ms | Memory: 6.13 KB | Expanded: 8 | Generated: 10
+  -> Running UCS... [UCS] SOLVED | Moves: 8 | Cost: 18.00 | Time: 1.18 ms | Memory: 6.41 KB | Expanded: 11 | Generated: 11
+  -> Running A*... [A*] SOLVED | Moves: 8 | Cost: 8.00 | Time: 1.09 ms | Memory: 6.41 KB | Expanded: 11 | Generated: 12
+
+[+] Testing Stage: probfs2
+  -> Running BFS... [BFS] SOLVED | Moves: 8 | Cost: 8.00 | Time: 2.74 ms | Memory: 18.82 KB | Expanded: 25 | Generated: 29
+  -> Running DFS... [DFS] SOLVED | Moves: 8 | Cost: 8.00 | Time: 1.08 ms | Memory: 7.15 KB | Expanded: 10 | Generated: 12
+  -> Running UCS... [UCS] SOLVED | Moves: 8 | Cost: 18.00 | Time: 4.87 ms | Memory: 25.38 KB | Expanded: 45 | Generated: 48
+  -> Running A*... [A*] SOLVED | Moves: 8 | Cost: 8.00 | Time: 1.63 ms | Memory: 10.29 KB | Expanded: 14 | Generated: 19
+
+[+] Testing Stage: prodfs1
+  -> Running BFS... [BFS] SOLVED | Moves: 16 | Cost: 16.00 | Time: 1031.55 ms | Memory: 9844.95 KB | Expanded: 6464 | Generated: 7855
+  -> Running DFS... [DFS] SOLVED | Moves: 16 | Cost: 16.00 | Time: 2.28 ms | Memory: 14.26 KB | Expanded: 16 | Generated: 18
+  -> Running UCS... [UCS] SOLVED | Moves: 16 | Cost: 16.00 | Time: 1916.62 ms | Memory: 11554.58 KB | Expanded: 9786 | Generated: 9940
+  -> Running A*... [A*] SOLVED | Moves: 16 | Cost: 16.00 | Time: 243.33 ms | Memory: 3004.11 KB | Expanded: 1233 | Generated: 2468
+
+[+] Testing Stage: prodfs2
+  -> Running BFS... [BFS] SOLVED | Moves: 18 | Cost: 18.00 | Time: 50.56 ms | Memory: 519.67 KB | Expanded: 395 | Generated: 504
+  -> Running DFS... [DFS] SOLVED | Moves: 18 | Cost: 18.00 | Time: 2.05 ms | Memory: 16.87 KB | Expanded: 18 | Generated: 22
+  -> Running UCS... [UCS] SOLVED | Moves: 18 | Cost: 18.00 | Time: 144.93 ms | Memory: 1091.23 KB | Expanded: 888 | Generated: 1037
+  -> Running A*... [A*] SOLVED | Moves: 18 | Cost: 18.00 | Time: 25.43 ms | Memory: 171.29 KB | Expanded: 198 | Generated: 247
+
+[+] Testing Stage: proucs1
+  -> Running BFS... [BFS] SOLVED | Moves: 10 | Cost: 10.00 | Time: 50.11 ms | Memory: 608.23 KB | Expanded: 310 | Generated: 405
+  -> Running DFS... [DFS] SOLVED | Moves: 299 | Cost: 299.00 | Time: 103.65 ms | Memory: 1297.57 KB | Expanded: 572 | Generated: 858
+  -> Running UCS... [UCS] SOLVED | Moves: 10 | Cost: 7.50 | Time: 18.84 ms | Memory: 200.37 KB | Expanded: 122 | Generated: 190
+  -> Running A*... [A*] SOLVED | Moves: 10 | Cost: 10.00 | Time: 4.66 ms | Memory: 54.31 KB | Expanded: 32 | Generated: 59
+
+[+] Testing Stage: proucs2
+  -> Running BFS... [BFS] SOLVED | Moves: 5 | Cost: 5.00 | Time: 3.36 ms | Memory: 42.94 KB | Expanded: 29 | Generated: 51
+  -> Running DFS... [DFS] SOLVED | Moves: 22 | Cost: 22.00 | Time: 2.51 ms | Memory: 27.21 KB | Expanded: 23 | Generated: 39
+  -> Running UCS... [UCS] SOLVED | Moves: 10 | Cost: 6.50 | Time: 5.65 ms | Memory: 50.60 KB | Expanded: 45 | Generated: 68
+  -> Running A*... [A*] SOLVED | Moves: 5 | Cost: 5.00 | Time: 1.33 ms | Memory: 16.02 KB | Expanded: 10 | Generated: 22
