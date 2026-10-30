@@ -1,6 +1,6 @@
 """
 Base search classes, search node representation, and benchmarking metrics.
-Used across all algorithms: BFS, DFS/IDS, UCS, and A*.
+Used across all algorithms: BFS, DFS, UCS, and A*.
 """
 
 import time
@@ -14,7 +14,7 @@ from ..game.constants import Direction
 from ..game.environment import BloxorzEnv
 
 
-@dataclass(slots=True)
+@dataclass
 class SearchNode:
     """
     Search tree / graph node.

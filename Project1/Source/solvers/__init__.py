@@ -4,7 +4,7 @@ Solvers package exposing base classes and search algorithms.
 
 from .base import BaseSolver, SearchNode, SearchResult
 from .bfs import BFSSolver
-from .dfs import DFSSolver, IDSSolver
+from .dfs import DFSSolver
 from .ucs import UCSSolver, default_cost_function, custom_cost_function
 from .astar import AStarSolver
 from .heuristics import (
@@ -19,7 +19,6 @@ __all__ = [
     "SearchResult",
     "BFSSolver",
     "DFSSolver",
-    "IDSSolver",
     "UCSSolver",
     "default_cost_function",
     "custom_cost_function",
