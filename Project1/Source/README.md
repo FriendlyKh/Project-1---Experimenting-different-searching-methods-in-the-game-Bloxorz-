@@ -107,7 +107,7 @@ Source/
 ├── solvers/                    # Search algorithms
 │   ├── base.py                 # BaseSolver, SearchNode, SearchResult (metrics profiler)
 │   ├── bfs.py                  # Breadth-First Search (Member 2)
-│   ├── dfs.py                  # Depth-First Search & Iterative Deepening (Member 2)
+│   ├── dfs.py                  # Depth-First Search (Member 2)
 │   ├── ucs.py                  # Uniform-Cost Search with cost functions (Member 3)
 │   ├── astar.py                # A* Search algorithm (Member 3)
 │   └── heuristics.py           # Manhattan, Orientation-aware, Relaxed BFS (Member 3)

@@ -14,7 +14,7 @@ Project 1/
 │   ├── README.md                   # How to install, run, and test the project
 │   ├── config.py                   # Game configurations, display colors, limits
 │   ├── game/                       # [Member 1] Board model, block physics, state hashing
-│   ├── solvers/                    # [Members 2 & 3] BFS, DFS/IDS, UCS, A*, heuristics
+│   ├── solvers/                    # [Members 2 & 3] BFS, DFS, UCS, A*, heuristics
 │   ├── gui/                        # [Member 4] Pygame interface, animations, replay controls
 │   ├── stages/                     # JSON stage definitions (levels 1-5 + classic)
 │   ├── experiments/                # Benchmark automation & matplotlib plotting

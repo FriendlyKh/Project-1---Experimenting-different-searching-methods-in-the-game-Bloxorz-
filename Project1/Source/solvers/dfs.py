@@ -1,9 +1,9 @@
 """
-Depth-First Search (DFS) & Iterative Deepening Search (IDS) Solvers.
+Depth-First Search (DFS) Solver.
 Assigned to: Member 2 (Uninformed Search Algorithms)
 
 Project Requirements (Section 3.3):
-- Implement DFS or IDS to solve Bloxorz.
+- Implement DFS to solve Bloxorz.
 - Handle repeated states to avoid getting stuck in infinite loops / cycles.
 """
 
@@ -73,11 +73,3 @@ class DFSSolver(BaseSolver):
                     generated_count += 1
 
         return None, expanded_count, generated_count
-
-
-
-class IDSSolver(BaseSolver):
-    """
-    Iterative Deepening Search (Optional alternative to DFS, Section 3.3).
-    """
-    pass

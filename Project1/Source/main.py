@@ -19,7 +19,7 @@ try:
     from game.stage_loader import StageLoader
     from game.environment import BloxorzEnv
     from solvers.bfs import BFSSolver
-    from solvers.dfs import DFSSolver, IDSSolver
+    from solvers.dfs import DFSSolver
     from solvers.ucs import UCSSolver, default_cost_function, custom_cost_function
     from solvers.astar import AStarSolver
     from solvers.heuristics import manhattan_heuristic
@@ -28,7 +28,7 @@ except ImportError:
     from Source.game.stage_loader import StageLoader
     from Source.game.environment import BloxorzEnv
     from Source.solvers.bfs import BFSSolver
-    from Source.solvers.dfs import DFSSolver, IDSSolver
+    from Source.solvers.dfs import DFSSolver
     from Source.solvers.ucs import UCSSolver, default_cost_function, custom_cost_function
     from Source.solvers.astar import AStarSolver
     from Source.solvers.heuristics import manhattan_heuristic
@@ -78,7 +78,6 @@ def run_cli_solver(
     solvers = {
         "bfs": BFSSolver(),
         "dfs": DFSSolver(),
-        "ids": IDSSolver(),
         "ucs": UCSSolver(cost_fn=cost_fn),
         "astar": AStarSolver(heuristic_fn=heuristic_fn),
     }
@@ -166,7 +165,7 @@ def main():
         "--solver",
         type=str,
         default="astar",
-        choices=["bfs", "dfs", "ids", "ucs", "astar"],
+        choices=["bfs", "dfs", "ucs", "astar"],
         help="Search algorithm to run (default: astar)",
     )
     parser.add_argument(

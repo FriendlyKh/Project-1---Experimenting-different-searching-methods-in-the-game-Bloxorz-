@@ -15,7 +15,7 @@ Here is the recommended task division:
 | Member | Primary Role | Assigned Tasks & Components | Target Files |
 | :--- | :--- | :--- | :--- |
 | **Member 1** | **Core Game Mechanics & State Modeling** | • Board representation & JSON Stage Loader<br>• 1x1x2 block rolling physics (all 12 orientation transitions)<br>• Advanced tiles: Fragile tiles (orange), Bridges, Switches (soft, heavy, split)<br>• Block splitting & rejoining logic<br>• Immutable `GameState` hashing & equality (`__hash__`, `__eq__`)<br>• Stage design & validation test cases | `game/block.py`<br>`game/board.py`<br>`game/state.py`<br>`game/stage_loader.py`<br>`game/environment.py`<br>`stages/*.json`<br>`tests/test_transitions.py`<br>`tests/test_state.py` |
-| **Member 2** | **Search Infrastructure & Uninformed Algorithms** | • Base search abstractions (`SearchNode`, `BaseSolver`, `SearchResult`)<br>• Execution metrics tracker (`tracemalloc` peak memory, `perf_counter` timing)<br>• Breadth-First Search (BFS) implementation<br>• Depth-First Search (DFS) & Iterative Deepening Search (IDS)<br>• Cycle avoidance & visited state hashing<br>• Solution path reconstruction | `solvers/base.py`<br>`solvers/bfs.py`<br>`solvers/dfs.py`<br>`tests/test_solvers.py` |
+| **Member 2** | **Search Infrastructure & Uninformed Algorithms** | • Base search abstractions (`SearchNode`, `BaseSolver`, `SearchResult`)<br>• Execution metrics tracker (`tracemalloc` peak memory, `perf_counter` timing)<br>• Breadth-First Search (BFS) implementation<br>• Depth-First Search (DFS)<br>• Cycle avoidance & visited state hashing<br>• Solution path reconstruction | `solvers/base.py`<br>`solvers/bfs.py`<br>`solvers/dfs.py`<br>`tests/test_solvers.py` |
 | **Member 3** | **Informed Search Algorithms & Heuristics** | • Priority queue management (min-heap with tie-breaking)<br>• Uniform-Cost Search (UCS) implementation<br>• Custom UCS cost function design & formal justification<br>• A* Search implementation<br>• Admissible & consistent heuristic functions (Manhattan / 2, Orientation-aware, Relaxed BFS)<br>• Mathematical admissibility proofs for the report | `solvers/ucs.py`<br>`solvers/astar.py`<br>`solvers/heuristics.py`<br>`tests/test_solvers.py` |
 | **Member 4** | **GUI, Visualizer & Experimental Benchmarks** | • Pygame interactive user interface & renderer<br>• 3D shaded block rendering & tile visual design<br>• Manual keyboard play (arrows, spacebar for split cubes)<br>• Animated step-by-step solver replay controller<br>• Benchmark automated runner script (`experiments/benchmark.py`)<br>• Matplotlib chart generator (`experiments/plot_results.py`)<br>• Demo video recording & editing (Section 3.7) | `gui/renderer.py`<br>`gui/widgets.py`<br>`gui/app.py`<br>`main.py`<br>`experiments/benchmark.py`<br>`experiments/plot_results.py` |
 
@@ -64,7 +64,7 @@ main (stable, working code only)
 
 ### **Week 2: Algorithms Implementation & Integration**
 - **Day 8-10:**
-  - Member 2 implements and tunes BFS and DFS/IDS.
+  - Member 2 implements and tunes BFS and DFS.
   - Member 3 implements UCS (with cost functions) and A* (with heuristics).
 - **Day 11-12:**
   - Member 4 integrates solver calls into the GUI and tests animated replay.

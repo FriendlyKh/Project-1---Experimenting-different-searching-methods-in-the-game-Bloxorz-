@@ -43,7 +43,6 @@ $$G(s) = \text{True} \iff (\neg s.B.\text{is\_split}) \land (s.B.\theta = \text{
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **BFS** | Yes | Yes (for unit costs) | $O(b^d)$ | $O(b^d)$ | FIFO Queue (`collections.deque`) |
 | **DFS** | Yes* (with cycle check) | No | $O(b^m)$ | $O(b \cdot m)$ | LIFO Stack (`list`) |
-| **IDS** | Yes | Yes (for unit costs) | $O(b^d)$ | $O(b \cdot d)$ | Iterative Depth-Limited Stack |
 | **UCS** | Yes (if $c \ge \epsilon > 0$) | Yes (any non-negative $c$) | $O(b^{1 + \lfloor C^* / \epsilon \rfloor})$ | $O(b^{1 + \lfloor C^* / \epsilon \rfloor})$ | Min-Heap Priority Queue (`heapq`) |
 | **A\*** | Yes (if $h$ admissible) | Yes (if $h$ admissible) | $O(b^d)$ | $O(b^d)$ | Min-Heap ordered by $f(n) = g(n) + h(n)$ |
 
