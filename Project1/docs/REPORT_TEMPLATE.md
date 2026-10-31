@@ -61,9 +61,9 @@ This document provides a structure and checklist for your team to write the **Re
 
 #### 4.1 Test Dataset Description
 The benchmark suite evaluates **4 search algorithms (`BFS`, `DFS`, `UCS`, `A*`)** across **24 stages** (`96` total runs, unified `120.0s` timeout per run), grouped into two categories:
-1. **Core & Large-Scale Puzzle Progression (`stage_01_core` – `stage_14_ragebait`, 14 stages):**
+1. **Core & Large-Scale Puzzle Progression (`stage_01_core` – `stage_14_spiral`, 14 stages):**
    - *Mechanics Introduction (`stage_01_core` – `stage_04_split`):* Baseline 1×1×2 rolling (`stage_01_core`), fragile orange tile avoidance (`stage_02_fragile`), soft/heavy switch & bridge toggling (`stage_03_bridge`), and dual-cube split/merge coordination (`stage_04_split`).
-   - *Medium-to-Extreme Combinatorial Maps (`stage_05_labyrinth` – `stage_14_ragebait`):* Large multi-island and pixel-art boards combining fragile corridors, chained toggle bridges, and split switches (`stage_08_rick_roll`, `stage_09_anime_girl`, `stage_11_bad_apple`, `stage_13_rainbow_cat` expanding up to ~248,000 states), plus narrow corridor puzzles (`stage_14_ragebait`).
+   - *Medium-to-Extreme Combinatorial Maps (`stage_05_labyrinth` – `stage_14_spiral`):* Large multi-island and pixel-art boards combining fragile corridors, chained toggle bridges, and split switches (`stage_08_rick_roll`, `stage_09_anime_girl`, `stage_11_bad_apple`, `stage_13_rainbow_cat` expanding up to ~248,000 states), plus spiral perimeter corridor puzzles (`stage_14_spiral`).
 2. **Diagnostic & Adversarial Stress Maps (10 specialized stages):**
    - *A\*-Favorable vs. A\*-Adversarial (`proastar1`, `proatrar2`, `conastar1`, `conastar2`):* Wide open branching boards where Manhattan guidance excels versus deceptive obstacle/switch detours that force optimal paths to temporarily move away from the goal.
    - *BFS / DFS / UCS Targeted Maps (`probfs1`, `probfs2`, `prodfs1`, `prodfs2`, `proucs1`, `proucs2`):* Shallow branching boards, deep directional corridors aligned with DFS action order, and fragile-vs-switch trade-off maps highlighting UCS's risk-aware cost model.
@@ -75,10 +75,10 @@ The benchmark suite evaluates **4 search algorithms (`BFS`, `DFS`, `UCS`, `A*`)*
 
 | Algorithm | Solved Stages | Total Moves (24 Stages) | Avg. Moves / Stage | Total Expanded Nodes | Avg. Expanded / Stage | Total Search Time (ms) | Max Peak Memory (KB) |
 | :--- | :---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| **BFS** | **24 / 24 (100%)** | **940** | **39.17** | 611,297 | 25,470.71 | 111,751.79 | 264,152.61 |
-| **DFS** | **24 / 24 (100%)** | 30,632 | 1,276.33 | **38,680** | **1,611.67** | **6,892.80** | **40,833.96** |
-| **UCS** | **24 / 24 (100%)** | 954 | 39.75 | 454,409 | 18,933.71 | 100,701.67 | 278,544.29 |
-| **A\*** | **24 / 24 (100%)** | **940** | **39.17** | 291,773 | 12,157.21 | 58,567.36 | 180,668.81 |
+| **BFS** | **24 / 24 (100%)** | **940** | **39.17** | 611,299 | 25,470.79 | 111,749.95 | 264,152.61 |
+| **DFS** | **24 / 24 (100%)** | 30,627 | 1,276.12 | **38,706** | **1,612.75** | **6,892.31** | **40,833.96** |
+| **UCS** | **24 / 24 (100%)** | 954 | 39.75 | 454,375 | 18,932.29 | 100,685.47 | 278,544.29 |
+| **A\*** | **24 / 24 (100%)** | **940** | **39.17** | 291,767 | 12,156.96 | 58,528.24 | 180,668.81 |
 
 ##### B. Detailed Per-Stage Benchmark Results (All 24 Stages)
 
@@ -136,10 +136,10 @@ The benchmark suite evaluates **4 search algorithms (`BFS`, `DFS`, `UCS`, `A*`)*
 | | DFS | Yes | 7185 | 7185.00 | 1485.63 | 27423.21 | 8489 | 20998 |
 | | UCS | Yes | 127 | 172.20 | 53896.99 | 278544.29 | 240044 | 300042 |
 | | A* | Yes | 124 | 124.00 | 27954.78 | 180668.81 | 146983 | 159376 |
-| **stage_14_ragebait** | BFS | Yes | 68 | 68.00 | 35.35 | 246.54 | 413 | 429 |
-| | DFS | Yes | 80 | 80.00 | 14.14 | 66.08 | 98 | 118 |
-| | UCS | Yes | 68 | 73.00 | 55.29 | 248.75 | 453 | 461 |
-| | A* | Yes | 68 | 68.00 | 79.69 | 227.46 | 405 | 422 |
+| **stage_14_spiral** | BFS | Yes | 68 | 68.00 | 33.51 | 247.83 | 415 | 418 |
+| | DFS | Yes | 75 | 75.00 | 13.65 | 77.68 | 124 | 144 |
+| | UCS | Yes | 68 | 73.00 | 39.09 | 217.11 | 419 | 421 |
+| | A* | Yes | 68 | 68.00 | 40.57 | 221.25 | 399 | 412 |
 | **conastar1** | BFS | Yes | 18 | 18.00 | 486.31 | 4966.12 | 3947 | 4050 |
 | | DFS | Yes | 879 | 879.00 | 123.78 | 2913.23 | 1229 | 2325 |
 | | UCS | Yes | 18 | 17.50 | 537.87 | 5423.45 | 4219 | 4431 |
@@ -186,19 +186,19 @@ The benchmark suite evaluates **4 search algorithms (`BFS`, `DFS`, `UCS`, `A*`)*
 
 #### 4.4 Analytical Insights & Discussion
 1. **Search Efficiency & Heuristic Guidance (`A*` vs. `BFS`):**
-   - Across all 24 stages, **A\*** (strictly using `manhattan_heuristic`, $h(s) = \text{Manhattan}/2$) expands **291,773** total nodes compared to **611,297** for **BFS** (**52.27% reduction**) and cuts cumulative search time nearly in half (**58.57s vs. 111.75s**, **47.59% faster**).
+   - Across all 24 stages, **A\*** (strictly using `manhattan_heuristic`, $h(s) = \text{Manhattan}/2$) expands **291,767** total nodes compared to **611,299** for **BFS** (**52.27% reduction**) and cuts cumulative search time nearly in half (**58.53s vs. 111.75s**, **47.63% faster**).
    - On high-branching boards where geometric proximity correlates with true distance, heuristic pruning is dramatic: on `stage_11_bad_apple`, A\* expands **3,407** nodes vs. BFS's **77,638** (**22.8× fewer nodes**, **20.8× faster**: `720.78 ms` vs. `14,990.91 ms`); on `proastar1` and `proatrar2`, A\* expands **37.4×** (`62` vs. `2,320`) and **45.2×** (`6` vs. `271`) fewer nodes respectively.
-   - **Adversarial Heuristic Traps:** On maps with switch detours or U-shaped barriers (`conastar1`, `stage_05_labyrinth`, `stage_14_ragebait`), the optimal path must temporarily move *away* from the goal, creating a heuristic local minimum. Here, A\* expands almost as many states as BFS (`3,526` vs. `3,947` on `conastar1`; `8,918` vs. `9,695` on `stage_05_labyrinth`), and its runtime slightly exceeds BFS (`706.01 ms` vs. `486.31 ms` on `conastar1`) because min-heap operations ($O(\log N)$) and per-state heuristic evaluation carry higher constant overhead than BFS's $O(1)$ `collections.deque` operations.
+   - **Adversarial Heuristic Traps:** On maps with switch detours or U-shaped/spiral barriers (`conastar1`, `stage_05_labyrinth`, `stage_14_spiral`), the optimal path must temporarily move *away* from the goal, creating a heuristic local minimum. Here, A\* expands almost as many states as BFS (`3,526` vs. `3,947` on `conastar1`; `8,918` vs. `9,695` on `stage_05_labyrinth`; `399` vs. `415` on `stage_14_spiral`), and its runtime slightly exceeds BFS (`706.01 ms` vs. `486.31 ms` on `conastar1`; `40.57 ms` vs. `33.51 ms` on `stage_14_spiral`) because min-heap operations ($O(\log N)$) and per-state heuristic evaluation carry higher constant overhead than BFS's $O(1)$ `collections.deque` operations.
 2. **Solution Optimality vs. First-Path Speed (`BFS` / `A*` / `UCS` vs. Graph-Search `DFS`):**
    - **BFS** and **A\*** achieve **100% identical shortest move counts on every single stage** (`940` total moves across 24 stages), empirically validating the admissibility and consistency of `manhattan_heuristic`.
-   - **Why Graph-Search `DFS` is Faster & Uses Fewer Nodes/Memory, Yet Produces Severely Suboptimal Solutions:** Because Bloxorz boards are finite, strongly connected state graphs, standard Graph-Search DFS (`visited` set without premature depth cutoffs) plunges directly along a single deep trajectory rather than sweeping breadth-wise layers $d = 1, 2, \dots, d^*$. Consequently, DFS stumbles into the goal after expanding only **38,680** total nodes (**6.89s** total runtime, max memory **40.83 MB**) and excels on aligned corridor maps (`prodfs1`: `16` nodes in `1.34 ms` vs. BFS's `6,464` nodes in `991.43 ms`). However, this speed comes at the cost of **extreme path suboptimality**: DFS requires **30,632 total moves** (**32.6× worse** than optimal `940` moves), wandering for **10,431 moves** vs. `79` optimal on `stage_09_anime_girl` (**132× longer**) and **7,185 moves** vs. `124` on `stage_13_rainbow_cat` (**57.9× longer**). Moreover, when DFS's fixed action order enters dead-end regions first (`stage_03_bridge`, `conastar2`, `proatrar2`, `proucs1`), DFS expands *more* nodes and runs *slower* than both BFS and A\* (e.g., `811` nodes / `119.48 ms` for DFS vs. `6` nodes / `1.30 ms` for A\* on `proatrar2`).
+   - **Why Graph-Search `DFS` is Faster & Uses Fewer Nodes/Memory, Yet Produces Severely Suboptimal Solutions:** Because Bloxorz boards are finite, strongly connected state graphs, standard Graph-Search DFS (`visited` set without premature depth cutoffs) plunges directly along a single deep trajectory rather than sweeping breadth-wise layers $d = 1, 2, \dots, d^*$. Consequently, DFS stumbles into the goal after expanding only **38,706** total nodes (**6.89s** total runtime, max memory **40.83 MB**) and excels on aligned corridor maps (`prodfs1`: `16` nodes in `1.34 ms` vs. BFS's `6,464` nodes in `991.43 ms`). However, this speed comes at the cost of **extreme path suboptimality**: DFS requires **30,627 total moves** (**32.6× worse** than optimal `940` moves), wandering for **10,431 moves** vs. `79` optimal on `stage_09_anime_girl` (**132× longer**) and **7,185 moves** vs. `124` on `stage_13_rainbow_cat` (**57.9× longer**). Moreover, when DFS's fixed action order enters dead-end regions first (`stage_03_bridge`, `conastar2`, `proatrar2`, `proucs1`), DFS expands *more* nodes and runs *slower* than both BFS and A\* (e.g., `811` nodes / `119.48 ms` for DFS vs. `6` nodes / `1.30 ms` for A\* on `proatrar2`).
 3. **Risk-Aware Cost Optimization (`UCS` Behavior):**
    - **UCS** optimizes the non-uniform risk-aware cost model (`BASE_MOVE_COST = 1.0`, `FRAGILE_PENALTY = +2.0`, `SWITCH_EVENT_COST = 0.5`, `SPLIT_MOVE_PENALTY = +0.2`, `SWITCH_CUBE_COST = 0.3`).
    - On fragile-tile stages (`proucs2`, `stage_07_terra_globe`, `stage_08_rick_roll`, `stage_12_heart`, `stage_13_rainbow_cat`), UCS deliberately trades extra moves for safer routing—most visibly on `proucs2`, taking a **10-move** switch/safe detour with total cost **6.50** instead of the **5-move** fragile shortcut.
    - Interestingly, on switch-gated puzzles (`stage_11_bad_apple`, `stage_09_anime_girl`, `stage_10_neko_cat`, `proucs1`), assigning `SWITCH_EVENT_COST = 0.5 < 1.0` prioritizes switch-activating states in the priority queue, allowing UCS to unlock bridges early and expand far fewer nodes than BFS (`11,373` vs. `77,638` on `stage_11_bad_apple`; `43,822` vs. `124,611` on `stage_09_anime_girl`).
 4. **Memory Consumption & Combinatorial Split-State Scaling:**
    - Peak memory (`tracemalloc`) scales linearly with the number of stored `SearchNode` and `GameState` objects in `frontier` and `visited` / `best_g_cost`.
-   - Standard 1×1×2 block stages (`stage_01`–`stage_03`, `stage_14_ragebait`) require under **250 KB**, whereas **Split-Switch stages** square the coordinate state space from $O(R \cdot C)$ to $O((R \cdot C)^2 \cdot 2^{|\mathcal{M}|})$: on `stage_13_rainbow_cat`, BFS peaks at **264,152.61 KB (~258.0 MB)** and UCS at **278,544.29 KB (~272.0 MB)** (higher than BFS due to lazy-deletion duplicate heap entries), while A\*'s heuristic pruning reduces peak memory by **31.6%** down to **180,668.81 KB (~176.4 MB)**.
+   - Standard 1×1×2 block stages (`stage_01`–`stage_03`, `stage_14_spiral`) require under **250 KB**, whereas **Split-Switch stages** square the coordinate state space from $O(R \cdot C)$ to $O((R \cdot C)^2 \cdot 2^{|\mathcal{M}|})$: on `stage_13_rainbow_cat`, BFS peaks at **264,152.61 KB (~258.0 MB)** and UCS at **278,544.29 KB (~272.0 MB)** (higher than BFS due to lazy-deletion duplicate heap entries), while A\*'s heuristic pruning reduces peak memory by **31.6%** down to **180,668.81 KB (~176.4 MB)**.
 
 ---
 
